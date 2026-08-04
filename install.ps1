@@ -84,14 +84,16 @@ function Write-IfMissing($path, $content) {
     }
 }
 
-# VS Code 格式：顶层用 "servers"
+# VS Code 格式：顶层用 "servers"（含 gallery + version 确保兼容）
 $vscodeConfig = @"
 {
   "servers": {
     "deepseek-vision": {
       "type": "stdio",
       "command": "node",
-      "args": ["$serverRelJson"]
+      "args": ["$serverRelJson"],
+      "gallery": "https://api.mcp.github.com",
+      "version": "1.0.0"
     }
   }
 }

@@ -72,13 +72,15 @@ write_if_missing() { # $1=path $2=content
   fi
 }
 
-# VS Code 格式（顶层 "servers"）
+# VS Code 格式（顶层 "servers"，含 gallery + version）
 VSCODE_CFG="{
   \"servers\": {
     \"deepseek-vision\": {
       \"type\": \"stdio\",
       \"command\": \"node\",
-      \"args\": [\"$SERVER\"]
+      \"args\": [\"$SERVER\"],
+      \"gallery\": \"https://api.mcp.github.com\",
+      \"version\": \"1.0.0\"
     }
   }
 }"
