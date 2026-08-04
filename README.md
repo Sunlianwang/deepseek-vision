@@ -11,13 +11,13 @@
 
 ```
 请帮我安装 deepseek-vision（多模态 MCP + Skill）：
-git clone <你的GitHub仓库地址> deepseek-vision && cd deepseek-vision && ./install.sh
+git clone https://github.com/Sunlianwang/deepseek-vision deepseek-vision && cd deepseek-vision && ./install.sh
 ```
 
 > Windows 用户把 `./install.sh` 换成 `powershell -ExecutionPolicy Bypass -File install.ps1`。
 > 也可以直接自己跑：
 > ```bash
-> git clone <你的GitHub仓库地址> deepseek-vision && cd deepseek-vision && ./install.sh
+> git clone https://github.com/Sunlianwang/deepseek-vision deepseek-vision && cd deepseek-vision && ./install.sh
 > ```
 
 安装脚本会：
