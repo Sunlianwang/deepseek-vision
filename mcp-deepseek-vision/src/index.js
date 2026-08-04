@@ -23,9 +23,9 @@ const wrap = (fn) => async (args) => {
 const TOOLS = [
   {
     name: "analyze_image",
-    desc: "多模态感知：用免费的 mimo-v2.5-free 识别/描述图片内容（给纯文本主模型做眼睛）。当用户提供图片时使用，返回感知文本供主模型推理。",
+    desc: "图片感知工具：用 mimo-v2.5-free 多模态模型识别/描述图片内容。重要：本工具接受文件路径作为参数。如果用户在聊天中直接粘贴了图片，请要求用户提供图片的本地文件路径（如 C:\\x\\a.png），然后调用本工具。不要尝试直接处理粘贴的图片。",
     schema: {
-      source: z.string().describe("图片来源：本地绝对路径（如 C:\\x\\a.png）、http(s) URL 或 data: URI"),
+      source: z.string().describe("图片的本地文件绝对路径（如 C:\\x\\a.png）或 http URL"),
       prompt: z.string().optional().describe("希望感知模型关注的提问，缺省为完整描述"),
       detail: z.enum(["auto", "low", "high"]).optional().describe("图像分辨率档位，默认 auto"),
     },
@@ -33,7 +33,7 @@ const TOOLS = [
   },
   {
     name: "transcribe_audio",
-    desc: "多模态感知：转写并理解音频内容（mp3/wav/m4a 等本地文件）。当用户提供音频时使用，返回转写文本供主模型推理。",
+    desc: "音频感知工具：转写并理解音频内容（mp3/wav/m4a 等本地文件）。重要：本工具接受文件路径作为参数。如果用户在聊天中直接粘贴了音频，请要求用户提供音频的本地文件路径，然后调用本工具。",
     schema: {
       source: z.string().describe("音频文件本地绝对路径（暂不支持 URL）"),
       prompt: z.string().optional().describe("附加要求，如“只提取其中的行动项”"),
@@ -42,7 +42,7 @@ const TOOLS = [
   },
   {
     name: "analyze_video",
-    desc: "多模态感知：自动抽帧后描述视频内容（本机需安装 ffmpeg）。当用户提供视频时使用，返回场景描述供主模型推理。",
+    desc: "视频感知工具：自动抽帧后描述视频内容（本机需安装 ffmpeg）。重要：本工具接受文件路径作为参数。如果用户在聊天中直接粘贴了视频，请要求用户提供视频的本地文件路径，然后调用本工具。",
     schema: {
       source: z.string().describe("视频文件本地绝对路径（如 C:\\x\\clip.mp4）"),
       prompt: z.string().optional().describe("希望感知模型关注的内容"),
@@ -52,9 +52,9 @@ const TOOLS = [
   },
   {
     name: "hybrid_analyze",
-    desc: "万能入口：自动识别输入类型（图片/音频/视频），调用免费多模态模型感知并返回感知文本，由你的主模型完成推理回答。日常使用这一个即可。",
+    desc: "万能感知入口：自动识别输入类型（图片/音频/视频），调用 mimo-v2.5-free 感知并返回文本。重要：本工具接受文件路径或 URL 作为参数。如果用户在聊天中直接粘贴了媒体文件，请要求用户提供文件的本地路径，然后调用本工具。不要尝试直接处理粘贴的媒体。",
     schema: {
-      source: z.string().describe("媒体来源：本地文件路径 / URL / data URI"),
+      source: z.string().describe("媒体文件的本地路径或 URL"),
       task: z.string().optional().describe("用户关注点（用于聚焦感知，可选）"),
       hint: z.enum(["image", "audio", "video"]).optional().describe("当无法从扩展名识别类型时，可显式指定"),
     },
