@@ -1,0 +1,32 @@
+{
+  "name": "deepseek-vision-mcp",
+  "version": "1.0.0",
+  "description": "通用多模态 MCP Server：MiMo-V2.5 Free 感知（图像/音频/视频）+ DeepSeek V4 Flash 推理大脑，全部走 opencode zen API，兼容所有 MCP 客户端",
+  "type": "module",
+  "bin": {
+    "deepseek-vision-mcp": "./src/index.js"
+  },
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test:zen": "node test/test-zen.mjs",
+    "test:mcp": "node test/test-mcp.mjs",
+    "test:all": "node test/test-zen.mjs && node test/test-mcp.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "deepseek",
+    "mimo",
+    "vision",
+    "multimodal",
+    "opencode-zen"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "zod": "^3.24.1"
+  }
+}

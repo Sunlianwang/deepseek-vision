@@ -1,0 +1,33 @@
+---
+description: 多模态全能感知 + DeepSeek 推理大脑统一工作流。用户提供图片/音频/视频或点名 DeepSeek 时使用，自动路由：感知层用免费 mimo-v2.5-free，推理层用 deepseek-v4-flash-free，无需手动切换模型。
+globs: 
+alwaysApply: false
+---
+
+# DeepSeek Vision · 通用多模态工作流
+
+> 依赖 MCP Server `deepseek-vision`（见 README 安装）。使用前先调用 `@mcp deepseek-vision zen_status` 确认配置。
+
+## 核心规则
+
+- 用户提供**图片 / 音频 / 视频**时，**必须**调用 `deepseek-vision` 的 MCP 工具，**不要**假装自己能"看"或"听"。
+- 媒体传**本地绝对路径**；音频暂不支持 URL；视频需本机安装 ffmpeg。
+- 模型路由全自动，**禁止**让用户切换模型。
+
+## 工具路由
+
+| 场景 | 工具 |
+|---|---|
+| 图片理解 | `@mcp deepseek-vision analyze_image` |
+| 音频转写 | `@mcp deepseek-vision transcribe_audio` |
+| 视频理解 | `@mcp deepseek-vision analyze_video` |
+| 纯文本 DeepSeek 推理 | `@mcp deepseek-vision deepseek_think` |
+| **一步到位（推荐）** | `@mcp deepseek-vision hybrid_analyze`（自动识别类型） |
+| 排查 | `@mcp deepseek-vision zen_status` / `list_models` |
+
+## 示例
+
+- 看图报错修复：`hybrid_analyze({ source: "D:\\bugs\\error.png", task: "识别报错并给出修复方案" })`
+- 会议录音转写：`transcribe_audio({ source: "C:\\meeting.mp3" })`
+- 视频内容：`analyze_video({ source: "D:\\clip.mp4" })`
+- 点名 DeepSeek：`deepseek_think({ prompt: "…" })`
