@@ -1,4 +1,4 @@
-﻿# 客户端接入指南
+﻿# 各客户端安装指南
 
 ## VS Code
 
@@ -138,4 +138,3 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 ## API Key
 
 从 https://opencode.ai/auth 获取，填入 `env` 字段即可。免费模型无需绑定支付方式。
-
