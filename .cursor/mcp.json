@@ -1,0 +1,11 @@
+﻿{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "node",
+      "args": ["src/index.js"],
+      "env": {
+        "OPENCODE_API_KEY": "sk-sWfm7AG0gMIkPhFClxVarNrtbAcyXTNZGH0RlgfbwUN4Nn1bWbw6kbagCHWJjkQ5"
+      }
+    }
+  }
+}
