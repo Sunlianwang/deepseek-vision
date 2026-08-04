@@ -1,4 +1,4 @@
-// zen.js — OpenAI 兼容 API 客户端（opencode zen / DeepSeek 官方 / 任意兼容端点）
+// zen.js — opencode zen API 客户端（OpenAI 兼容），仅用于感知层（多模态）
 import { config } from "./config.js";
 
 export class ZenError extends Error {

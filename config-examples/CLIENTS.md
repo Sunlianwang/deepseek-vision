@@ -4,6 +4,8 @@
 > 脚本自动注册 VS Code / Cursor / opencode / Claude Code / Codex 并安装 Skill。
 > 以下为手动配置方式，覆盖全部主流客户端。
 
+> ⚠️ 本 MCP 只做感知（眼睛），推理由你的 agent 客户端主模型完成，无需在这里配置任何推理模型。
+
 ## 通用 stdio 配置片段（其余客户端通用）
 
 ```json
@@ -47,23 +49,8 @@
 }
 ```
 
-## 进阶：BYOK（Bring Your Own Key / 换厂商）
+## 感知端点配置（`.env`）
 
-推理层/感知层可分别指向**任意 OpenAI 兼容端点**，只需改 `.env`：
-
-```bash
-# 推理层 → DeepSeek 官方 API（前提：官方无多模态，感知层仍用其他端点）
-TEXT_BASE_URL=https://api.deepseek.com
-TEXT_MODEL=deepseek-chat          # 或 deepseek-reasoner
-
-# 感知层 → opencode zen 免费 mimo（默认）
-MULTIMODAL_BASE_URL=https://opencode.ai/zen/v1
-MULTIMODAL_MODEL=mimo-v2.5-free
-
-# 或感知层 → OpenRouter 视觉模型
-# MULTIMODAL_BASE_URL=https://openrouter.ai/api/v1
-# MULTIMODAL_MODEL=qwen/qwen-2.5-vl-72b-instruct
-```
-
-- DeepSeek 官方端点 `https://api.deepseek.com` 为 OpenAI 兼容（已实测端点可达）
-- 若两个厂商 key 不同，需在 `src/config.js` 增加 `MULTIMODAL_API_KEY`/`TEXT_API_KEY` 变量（改动约 5 行）
+- `OPENCODE_API_KEY`（必填）：你自己的 opencode zen key，获取 https://opencode.ai/auth
+- `MULTIMODAL_MODEL`：感知模型，默认免费的 `mimo-v2.5-free`；可用 `list_models` 查看 zen 支持的其他多模态模型后替换
+- `OPENCODE_BASE_URL`：感知端点，默认 `https://opencode.ai/zen/v1`（OpenAI 兼容）

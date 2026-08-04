@@ -35,9 +35,9 @@ if (-not $Key) { Write-Error "未提供 API key，安装中止" }
 if (-not (Test-Path $envFile)) {
     @"
 # deepseek-vision 配置（key 仅存本地，勿提交）
+# 本 MCP 只做多模态感知（眼睛），推理由你的 agent 主模型完成
 OPENCODE_API_KEY=$Key
 MULTIMODAL_MODEL=mimo-v2.5-free
-TEXT_MODEL=deepseek-v4-flash-free
 "@ | Set-Content -Path $envFile -Encoding UTF8
     Write-Host "  ✅ .env 已生成" -ForegroundColor Green
 } else {

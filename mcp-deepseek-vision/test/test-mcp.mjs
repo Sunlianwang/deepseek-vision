@@ -4,8 +4,8 @@
  * 手工实现 MCP JSON-RPC over stdio：
  *   1. initialize
  *   2. notifications/initialized
- *   3. tools/list（确认 7 个工具注册成功）
- *   4. tools/call deepseek_think（真实调用 DeepSeek）
+ *   3. tools/list（确认 6 个工具注册成功）
+ *   4. tools/call hybrid_analyze（真实感知测试图）
  *   5. tools/call zen_status（连通性自检）
  */
 import { spawn } from "node:child_process";
@@ -70,24 +70,26 @@ try {
   /* 2. tools/list */
   const list = await send("tools/list");
   const tools = list.msg.result?.tools ?? [];
-  const want = ["analyze_image", "transcribe_audio", "analyze_video", "deepseek_think", "hybrid_analyze", "list_models", "zen_status"];
+  const want = ["analyze_image", "transcribe_audio", "analyze_video", "hybrid_analyze", "list_models", "zen_status"];
   const got = tools.map((t) => t.name);
   pass(`tools/list 返回 ${tools.length} 个工具：${got.join("、")}`);
   const missing = want.filter((w) => !got.includes(w));
   if (missing.length) fail(`缺少工具：${missing.join("、")}`);
-  else pass("7 个工具全部注册");
+  else pass("6 个工具全部注册");
 
-  /* 3. tools/call deepseek_think */
-  console.log("\n>>> 调用 deepseek_think（真实请求 DeepSeek）…");
-  const think = await send("tools/call", {
-    name: "deepseek_think",
-    arguments: { prompt: "只回复四个字：连接成功" },
+  /* 3. tools/call hybrid_analyze（测试图片 → 感知文本返回） */
+  console.log("\n>>> 调用 hybrid_analyze（测试图片 → 感知文本）…");
+  const hybrid = await send("tools/call", {
+    name: "hybrid_analyze",
+    arguments: {
+      source: TEST_IMAGE,
+      task: "识别图中所有文字与元素",
+    },
   });
-  const thinkText = think.msg.result?.content?.[0]?.text ?? JSON.stringify(think.msg).slice(0, 200);
-  console.log(`  >>> ${thinkText.slice(0, 120)}`);
-  if (thinkText.includes("连接成功")) pass("deepseek_think 端到端调用成功");
-  else if (thinkText.startsWith("❌")) fail(`deepseek_think 调用失败：${thinkText}`);
-  else pass(`deepseek_think 已返回（${thinkText.length} 字）`);
+  const hybridText = hybrid.msg.result?.content?.[0]?.text ?? JSON.stringify(hybrid.msg).slice(0, 300);
+  console.log(`  >>> ${hybridText.slice(0, 300)}`);
+  if (hybridText.startsWith("❌")) fail(`hybrid_analyze 调用失败：${hybridText}`);
+  else pass("hybrid_analyze 感知成功（返回感知文本，供主模型推理）");
 
   /* 4. tools/call zen_status */
   const status = await send("tools/call", { name: "zen_status", arguments: {} });
@@ -95,20 +97,6 @@ try {
   console.log(`\n${statusText}`);
   if (statusText.includes("✅")) pass("zen_status 自检通过");
   else fail("zen_status 自检未通过（见上方输出）");
-
-  /* 5. tools/call hybrid_analyze（图片 → MiMo 感知 → DeepSeek 推理 全链路） */
-  console.log("\n>>> 调用 hybrid_analyze（测试图片 → 感知 → 推理 全链路）…");
-  const hybrid = await send("tools/call", {
-    name: "hybrid_analyze",
-    arguments: {
-      source: TEST_IMAGE,
-      task: "这张图片属于什么主题？请用一句话总结，并说明图中包含哪些元素。",
-    },
-  });
-  const hybridText = hybrid.msg.result?.content?.[0]?.text ?? JSON.stringify(hybrid.msg).slice(0, 300);
-  console.log(`  >>> ${hybridText.slice(0, 300)}`);
-  if (hybridText.startsWith("❌")) fail(`hybrid_analyze 调用失败：${hybridText}`);
-  else pass("hybrid_analyze 全链路（图像→感知→DeepSeek 推理）成功");
 
   console.log("\n========== MCP 测试完成 ==========\n");
 } catch (err) {

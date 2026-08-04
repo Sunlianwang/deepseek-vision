@@ -1,4 +1,4 @@
-// media.js — 媒体处理：MIME 探测 / base64 编码 / 视频抽帧（ffmpeg）
+// media.js — 感知层媒体处理：MIME 探测 / base64 编码 / 视频抽帧（ffmpeg）
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
