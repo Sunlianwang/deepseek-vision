@@ -1,4 +1,4 @@
-# 客户端接入指南
+﻿# 客户端接入指南
 
 ## VS Code
 
@@ -14,7 +14,7 @@
     "deepseek-vision": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" },
       "gallery": "https://api.mcp.github.com",
       "version": "1.0.0"
@@ -46,7 +46,7 @@
   "mcpServers": {
     "deepseek-vision": {
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
   }
@@ -68,7 +68,7 @@
 ### 命令行（最简单）
 
 ```bash
-claude mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
+claude mcp add deepseek-vision -- npx -y deepseek-vision
 ```
 
 ### 配置文件
@@ -81,7 +81,7 @@ claude mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
   "mcpServers": {
     "deepseek-vision": {
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
   }
@@ -104,7 +104,7 @@ claude mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
   "mcp": {
     "deepseek-vision": {
       "type": "local",
-      "command": ["npx", "-y", "github:Sunlianwang/deepseek-vision"],
+      "command": ["npx", "-y", "deepseek-vision"],
       "enabled": true,
       "environment": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
@@ -119,7 +119,7 @@ claude mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
 ## Codex CLI
 
 ```bash
-codex mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
+codex mcp add deepseek-vision -- npx -y deepseek-vision
 ```
 
 ---
@@ -129,7 +129,7 @@ codex mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
 1. 打开客户端的 MCP 设置面板
 2. 添加 stdio 类型的 MCP Server：
    - **Command**: `npx`
-   - **Args**: `-y github:Sunlianwang/deepseek-vision`
+   - **Args**: `-y deepseek-vision`
    - **Env**: `OPENCODE_API_KEY=sk-你的zen-key`
 3. 重启客户端
 
@@ -138,3 +138,4 @@ codex mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
 ## API Key
 
 从 https://opencode.ai/auth 获取，填入 `env` 字段即可。免费模型无需绑定支付方式。
+

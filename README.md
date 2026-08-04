@@ -1,4 +1,4 @@
-# DeepSeek Vision · 给纯文本主模型做"眼睛"
+﻿# DeepSeek Vision · 给纯文本主模型做"眼睛"
 
 > **你的模型没有视觉？一行 JSON 搞定。**
 > 用免费的 MiMo-V2.5 Free 感知图片/音频/视频，推理还是你自己的主模型。
@@ -36,7 +36,7 @@
     "deepseek-vision": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" },
       "gallery": "https://api.mcp.github.com",
       "version": "1.0.0"
@@ -58,7 +58,7 @@
     "deepseek-vision": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
   }
@@ -82,7 +82,7 @@
   "mcpServers": {
     "deepseek-vision": {
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
   }
@@ -102,7 +102,7 @@
 **方式 A：命令行（最简单）**
 
 ```bash
-claude mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
+claude mcp add deepseek-vision -- npx -y deepseek-vision
 ```
 
 然后设置环境变量（在终端中执行）：
@@ -121,7 +121,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
   "mcpServers": {
     "deepseek-vision": {
       "command": "npx",
-      "args": ["-y", "github:Sunlianwang/deepseek-vision"],
+      "args": ["-y", "deepseek-vision"],
       "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
   }
@@ -144,7 +144,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
   "mcp": {
     "deepseek-vision": {
       "type": "local",
-      "command": ["npx", "-y", "github:Sunlianwang/deepseek-vision"],
+      "command": ["npx", "-y", "deepseek-vision"],
       "enabled": true,
       "environment": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
@@ -159,7 +159,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
 #### Codex CLI
 
 ```bash
-codex mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
+codex mcp add deepseek-vision -- npx -y deepseek-vision
 ```
 
 ---
@@ -169,7 +169,7 @@ codex mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
 1. 打开客户端的 MCP 设置面板
 2. 添加 stdio 类型的 MCP Server：
    - **Command**: `npx`
-   - **Args**: `-y github:Sunlianwang/deepseek-vision`
+   - **Args**: `-y deepseek-vision`
    - **Env**: `OPENCODE_API_KEY=sk-你的zen-key`
 3. 重启客户端
 
@@ -232,3 +232,4 @@ A: 在 `env` 中加 `MULTIMODAL_MODEL: "模型名"`，用 `list_models` 工具�
 ## 许可
 
 MIT
+
