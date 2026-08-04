@@ -1,6 +1,6 @@
 {
   "name": "deepseek-vision",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "给纯文本主模型做眼睛的多模态 MCP —— 用免费 mimo-v2.5-free 感知图片/音频/视频，返回文本给你的主模型推理",
   "type": "module",
   "main": "src/index.js",
@@ -10,7 +10,14 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": ["mcp", "vision", "multimodal", "deepseek", "mimo", "opencode-zen"],
+  "keywords": [
+    "mcp",
+    "vision",
+    "multimodal",
+    "deepseek",
+    "mimo",
+    "opencode-zen"
+  ],
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.0",
