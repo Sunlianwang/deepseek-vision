@@ -24,13 +24,18 @@
 1. **Node.js >= 18**（下载：https://nodejs.org）
 2. **opencode zen API key**（获取：https://opencode.ai/auth，免费，无需绑定支付方式）
 
-### 一键安装（选你用的客户端）
+### 一键安装
+
+把下面的 JSON 配置复制到你客户端的 MCP 配置文件中，**把 `sk-你的zen-key` 替换成你自己的 key**：
 
 ---
 
 #### VS Code
 
-打开命令面板 `Ctrl+Shift+P` → 输入 `MCP: Open User Configuration` → 编辑 `mcp.json`：
+配置文件路径：`C:\Users\你的用户名\AppData\Roaming\Code\User\mcp.json`（全局）
+或项目根 `.vscode/mcp.json`（项目级）
+
+打开方式：`Ctrl+Shift+P` → 输入 `MCP: Open User Configuration`
 
 ```json
 {
@@ -39,21 +44,18 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" },
-      "gallery": "https://api.mcp.github.com",
-      "version": "1.0.0"
+      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
     }
   }
 }
 ```
 
-> 也可以在项目根目录创建 `.vscode/mcp.json`，格式相同。
-
 ---
 
 #### Cursor
 
-编辑 `~/.cursor/mcp.json`（全局）或项目根 `.cursor/mcp.json`：
+配置文件路径：`C:\Users\你的用户名\.cursor\mcp.json`（全局）
+或项目根 `.cursor/mcp.json`（项目级）
 
 ```json
 {
@@ -75,13 +77,20 @@
 claude mcp add deepseek-vision -- npx -y deepseek-vision
 ```
 
-或手动创建 `.mcp.json`（同 Cursor 格式）。
+然后设置环境变量（在终端中执行）：
+
+```powershell
+set OPENCODE_API_KEY=sk-你的zen-key
+```
+
+或创建 `.mcp.json` 文件（同 Cursor 格式）。
 
 ---
 
 #### opencode
 
-编辑 `~/.config/opencode/opencode.json`（全局）或项目根 `opencode.json`：
+配置文件路径：`~/.config/opencode/opencode.json`（全局）
+或项目根 `opencode.json`（项目级）
 
 ```json
 {
@@ -129,16 +138,24 @@ MCP 设置面板 → 添加 stdio server：
 
 ## 使用
 
+### VS Code
+
 ```
 请分析图片 D:\x\photo.png 的内容
 ```
 
-agent 会自动调用 `hybrid_analyze` 感知图片，然后用你的主模型推理回答。
-
-> ⚠️ **重要：请提供文件路径，不要直接在聊天中粘贴图片！**
+> ⚠️ **VS Code 用户注意：请提供文件路径，不要直接粘贴图片！**
 >
-> 纯文本模型不支持直接接收图片。粘贴图片会导致 `image_url` 报错。
-> 正确做法：输入文件路径（如 `D:\x\photo.png`），MCP 会自动读取并感知。
+> VS Code 会自动把粘贴的图片作为 `image_url` 发给模型，但纯文本模型不支持这个格式。
+> 正确做法：输入文件路径（如 `D:\x\photo.png`）。
+
+### Codex / Claude Code 桌面端
+
+这些客户端支持直接粘贴图片，agent 会自动处理。
+
+### 所有客户端通用
+
+agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理回答。
 
 ---
 
