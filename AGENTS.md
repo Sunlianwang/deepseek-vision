@@ -17,6 +17,11 @@
 
 **其他客户端（Codex / Claude Code 桌面端等）**：可以直接粘贴图片，MCP 工具会自动处理。
 
+## 重要提醒
+
+当用户在聊天中看到文件路径（如 `C:\Users\xxx\Pictures\Screenshots\xxx.png`）时，
+**必须调用 MCP 工具处理**，不要尝试自己读取或忽略它。
+
 ## 对 agent 的强制要求
 
 1. 用户提供 **图片 / 音频 / 视频** 并要求分析时，**必须调用 deepseek-vision MCP 工具**（`hybrid_analyze` / `analyze_image` / `transcribe_audio` / `analyze_video`）获取感知文本，**禁止**声称自己能直接查看媒体。
