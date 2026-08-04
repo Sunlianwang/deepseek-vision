@@ -156,10 +156,25 @@ set OPENCODE_API_KEY=sk-你的zen-key
 
 ### Codex CLI
 
-运行以下命令：
+Codex 使用 TOML 格式配置。编辑 `~/.codex/config.toml`（CLI 和 IDE 扩展共享）：
+
+```toml
+[mcp_servers.deepseek-vision]
+command = "npx"
+args = ["-y", "deepseek-vision"]
+env = { OPENCODE_API_KEY = "sk-你的zen-key" }
+```
+
+或者通过 Codex CLI 添加：
 
 ```bash
 codex mcp add deepseek-vision -- npx -y deepseek-vision
+```
+
+然后设置环境变量：
+
+```powershell
+set OPENCODE_API_KEY=sk-你的zen-key
 ```
 
 ---
