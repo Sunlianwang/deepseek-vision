@@ -5,6 +5,16 @@
 - 感知层：`mimo-v2.5-free`（免费多模态，走用户自己的 opencode zen API key）
 - 推理层：**你的主模型** —— 拿到感知文本后结合用户任务完成推理回答
 
+## ⚠️ 绝对禁止：不要尝试直接处理用户粘贴的图片！
+
+**当用户在聊天中粘贴图片时，VS Code 会自动把图片作为 `image_url` 内容块发给模型。**
+**但 DeepSeek 等纯文本模型不支持 `image_url`，会直接报错。**
+
+**正确流程**：
+1. 用户粘贴图片 → 模型收到 `image_url` → 模型**不应该**尝试处理它
+2. 模型应该回复："请提供这张图片的文件路径（如 D:\x\photo.png），我来帮你分析"
+3. 用户提供文件路径 → 模型调用 `hybrid_analyze({ source: "D:\\x\\photo.png" })` → MCP 感知 → 模型推理回答
+
 ## 对 agent 的强制要求
 
 1. 用户提供 **图片 / 音频 / 视频** 并要求分析时，**必须调用 deepseek-vision MCP 工具**（`hybrid_analyze` / `analyze_image` / `transcribe_audio` / `analyze_video`）获取感知文本，**禁止**声称自己能直接查看媒体。

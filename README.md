@@ -4,6 +4,11 @@
 > 用免费的 MiMo-V2.5 Free 感知图片/音频/视频，推理还是你自己的主模型。
 > 只需填入你的 opencode zen API key。
 
+> ⚠️ **使用前必读：不要在聊天中粘贴图片！**
+>
+> DeepSeek 等纯文本模型**不支持直接接收图片**。粘贴图片会导致 `image_url` 报错。
+> 正确做法：**输入文件路径**（如 `请分析 D:\x\photo.png`），MCP 会自动处理。
+
 ## 安装
 
 ### 第一步：获取 API Key
@@ -188,7 +193,11 @@ codex mcp add deepseek-vision -- npx -y github:Sunlianwang/deepseek-vision
 
 agent 会自动调用 `hybrid_analyze` 感知图片，然后用你的主模型推理回答。
 
-**注意**：请提供**文件路径**，不要直接在聊天中粘贴图片（纯文本模型不支持直接接收图片）。
+> ⚠️ **重要：请提供文件路径，不要直接在聊天中粘贴图片！**
+>
+> DeepSeek 是纯文本模型，不支持直接接收图片。当你粘贴图片时，VS Code 会把图片作为 `image_url` 发给模型，模型不支持就会报错。
+>
+> 正确做法：输入文件路径（如 `D:\x\photo.png`），MCP 工具会自动读取文件并感知内容。
 
 ## 工具
 
