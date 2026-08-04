@@ -21,6 +21,13 @@ $envFile = Join-Path $root ".env"
 
 # 1. 确认 key（优先级: -Key 参数 > 环境变量 > 已有 .env > 交互输入）
 if (-not $Key) { $Key = $env:OPENCODE_API_KEY }
+# 检查全局配置
+$globalDir = "$env:USERPROFILE\.deepseek-vision"
+$globalEnv = Join-Path $globalDir ".env"
+if (-not $Key -and (Test-Path $globalEnv)) {
+    $m = Select-String -Path $globalEnv -Pattern '^OPENCODE_API_KEY=(.+)$' | Select-Object -First 1
+    if ($m) { $Key = $m.Matches[0].Groups[1].Value.Trim(); Write-Host "  ✅ 复用全局配置中的 key" -ForegroundColor Green }
+}
 if (-not $Key -and (Test-Path $envFile)) {
     $m = Select-String -Path $envFile -Pattern '^OPENCODE_API_KEY=(.+)$' | Select-Object -First 1
     if ($m) { $Key = $m.Matches[0].Groups[1].Value.Trim(); Write-Host "  ✅ 复用已有 .env 中的 key" -ForegroundColor Green }
@@ -31,7 +38,20 @@ if (-not $Key) {
 }
 if (-not $Key) { Write-Error "未提供 API key，安装中止" }
 
-# 2. 生成 .env（保留已存在配置）
+# 2. 生成全局配置（key 只存一份，所有项目共用）
+New-Item -ItemType Directory -Force -Path $globalDir | Out-Null
+if (-not (Test-Path $globalEnv)) {
+    @"
+# deepseek-vision 全局配置（key 只存本地，勿提交）
+# 本 MCP 只做多模态感知（眼睛），推理由你的 agent 主模型完成
+OPENCODE_API_KEY=$Key
+MULTIMODAL_MODEL=mimo-v2.5-free
+"@ | Set-Content -Path $globalEnv -Encoding UTF8
+    Write-Host "  ✅ 全局配置已生成: $globalEnv" -ForegroundColor Green
+} else {
+    Write-Host "  ⏭ 全局配置已存在（如需更换 key 请手动编辑 $globalEnv）" -ForegroundColor Yellow
+}
+# 同时生成项目级 .env（兼容性）
 if (-not (Test-Path $envFile)) {
     @"
 # deepseek-vision 配置（key 仅存本地，勿提交）
@@ -39,9 +59,9 @@ if (-not (Test-Path $envFile)) {
 OPENCODE_API_KEY=$Key
 MULTIMODAL_MODEL=mimo-v2.5-free
 "@ | Set-Content -Path $envFile -Encoding UTF8
-    Write-Host "  ✅ .env 已生成" -ForegroundColor Green
+    Write-Host "  ✅ 项目级 .env 已生成" -ForegroundColor Green
 } else {
-    Write-Host "  ⏭ .env 已存在（如需更换 key 请手动编辑）" -ForegroundColor Yellow
+    Write-Host "  ⏭ .env 已存在" -ForegroundColor Yellow
 }
 
 # 3. 安装依赖

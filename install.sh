@@ -14,14 +14,33 @@ SERVER="mcp-deepseek-vision/src/index.js"
 echo ""
 echo "=== deepseek-vision 一键安装 ==="
 
-# 1. 确认 key（优先级: 环境变量 > 交互输入）
+# 1. 确认 key（优先级: 环境变量 > 全局配置 > 交互输入）
 KEY="${OPENCODE_API_KEY:-}"
+GLOBAL_DIR="$HOME/.deepseek-vision"
+GLOBAL_ENV="$GLOBAL_DIR/.env"
+if [ -z "$KEY" ] && [ -f "$GLOBAL_ENV" ]; then
+  KEY=$(grep '^OPENCODE_API_KEY=' "$GLOBAL_ENV" | cut -d= -f2- | tr -d '"' | tr -d "'")
+  [ -n "$KEY" ] && echo "  ✅ 复用全局配置中的 key"
+fi
 if [ -z "$KEY" ]; then
   read -rp "请输入你的 opencode zen API key（获取: https://opencode.ai/auth）: " KEY
 fi
 [ -z "$KEY" ] && { echo "❌ 未提供 API key，安装中止" >&2; exit 1; }
 
-# 2. 生成 .env（保留已存在配置）
+# 2. 生成全局配置（key 只存一份，所有项目共用）
+mkdir -p "$GLOBAL_DIR"
+if [ ! -f "$GLOBAL_ENV" ]; then
+  cat > "$GLOBAL_ENV" <<EOF
+# deepseek-vision 全局配置（key 只存本地，勿提交）
+# 本 MCP 只做多模态感知（眼睛），推理由你的 agent 主模型完成
+OPENCODE_API_KEY=$KEY
+MULTIMODAL_MODEL=mimo-v2.5-free
+EOF
+  echo "  ✅ 全局配置已生成: $GLOBAL_ENV"
+else
+  echo "  ⏭ 全局配置已存在（如需更换 key 请手动编辑 $GLOBAL_ENV）"
+fi
+# 同时生成项目级 .env（兼容性）
 ENV_FILE="$ROOT/.env"
 if [ ! -f "$ENV_FILE" ]; then
   cat > "$ENV_FILE" <<EOF
@@ -30,9 +49,9 @@ if [ ! -f "$ENV_FILE" ]; then
 OPENCODE_API_KEY=$KEY
 MULTIMODAL_MODEL=mimo-v2.5-free
 EOF
-  echo "  ✅ .env 已生成"
+  echo "  ✅ 项目级 .env 已生成"
 else
-  echo "  ⏭ .env 已存在（如需更换 key 请手动编辑）"
+  echo "  ⏭ .env 已存在"
 fi
 
 # 3. 安装依赖

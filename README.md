@@ -19,25 +19,41 @@ flowchart LR
 - **推理层（大脑）**：**你的主模型** —— 你已经在 agent 客户端用上了，感知结果直接喂给它即可
 - 本 MCP 只做感知、不绑死任何推理模型，因此**与你现有的任何主模型/自定义 baseURL 天然兼容**
 
-## 🚀 一键安装
+## 🚀 安装（全局一次安装，所有项目通用）
 
-**把下面这句话复制给任意 agent 客户端**（Codex / Claude Code / Cursor / VS Code / opencode…），AI 会自动完成克隆 → 装依赖 → 让你填 opencode zen key → 注册 MCP → 安装 Skill：
+### 方式一：一键安装（推荐）
+
+**把下面这句话复制给任意 agent 客户端**（Codex / Claude Code / Cursor / VS Code / opencode…），AI 会自动完成全部配置：
 
 ```
-请帮我安装 deepseek-vision（多模态感知 MCP + Skill，给我的纯文本主模型做眼睛）：
+请帮我安装 deepseek-vision（多模态感知 MCP + Skill，全局安装，所有项目通用）：
 git clone https://github.com/Sunlianwang/deepseek-vision deepseek-vision && cd deepseek-vision && ./install.sh
 ```
 
 > Windows 用户把 `./install.sh` 换成 `powershell -ExecutionPolicy Bypass -File install.ps1`。
 
 安装脚本会：
-1. 让你填入自己的 opencode zen API key（或环境变量 `OPENCODE_API_KEY`，获取 https://opencode.ai/auth）
-2. 生成 `.env`（key 只存本地）
+1. 让你填入 opencode zen API key（或复用已有配置）
+2. **全局存储 key** 到 `~/.deepseek-vision/.env`（一次配置，所有项目共用）
 3. 安装依赖
-4. 自动注册 MCP 到检测到的客户端（VS Code / Cursor / opencode / Claude Code / Codex）
-5. 安装 Skill 到 `.opencode/skills/`、`.claude/skills/`、`.agents/skills/`
+4. 注册 MCP 到检测到的客户端（VS Code / Cursor / Claude Code / opencode）
+5. 安装 Skill 到全局 Skill 目录
 
-完成后直接对 agent 说：**"分析这张图 / 转写这段音频 / 看这个视频"**，agent 会先调用 MCP 感知，再用你的主模型回答。
+**之后你新建或切换任何项目，MCP 和 Skill 都自动可用，无需重复安装。**
+
+### 方式二：手动全局注册（各客户端）
+
+如需手动配置，各客户端的全局 MCP 注册方式见 [`config-examples/CLIENTS.md`](config-examples/CLIENTS.md)。
+
+关键区别：**全局配置 vs 项目级**
+
+| 内容 | 存储位置 | 说明 |
+|---|---|---|
+| API key | `~/.deepseek-vision/.env` | 全局一份，所有项目共用 |
+| MCP 注册 | 各客户端全局配置 | VS Code: `AppData\Code\User\mcp.json`，Cursor: `~/.cursor/mcp.json` 等 |
+| Skill | 各客户端全局 skill 目录 | 一次安装，所有项目可用 |
+
+> 项目级 `.env` 作为兼容保留——如果项目有特殊需求（如不同 key），可覆盖全局配置。
 
 ## 🛠 工具（6 个，全部只做感知）
 
