@@ -19,15 +19,15 @@
       "type": "stdio",
       "command": "node",
       "args": ["mcp-deepseek-vision/src/index.js"],
-      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
+      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" },
+      "gallery": "https://api.mcp.github.com",
+      "version": "1.0.0"
     }
   }
 }
 ```
 
-**项目级**（仅当前项目）：项目根 `.vscode/mcp.json`（格式同上）。
-
-> Skill 全局放 `~/.vscode/skills/deepseek-vision.skill.md`，项目级放 `.vscode/skills/`。
+> **注意**：VS Code 顶层键是 `"servers"`（不是 `"mcpServers"`），必须加 `"gallery"` 和 `"version"` 字段。
 
 ### Cursor
 

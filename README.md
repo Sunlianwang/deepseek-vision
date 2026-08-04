@@ -79,15 +79,30 @@ git clone https://github.com/Sunlianwang/deepseek-vision deepseek-vision && cd d
 └── .env                        # 你的 opencode zen key（已 gitignore）
 ```
 
-## ⚙️ 配置（`.env`）
+## ⚙️ 配置（API key 通过 `env` 字段传入）
 
-| 变量 | 默认值 | 说明 |
-|---|---|---|
-| `OPENCODE_API_KEY` | 必填 | 你自己的 opencode zen key，获取 https://opencode.ai/auth |
-| `OPENCODE_BASE_URL` | `https://opencode.ai/zen/v1` | 感知端点（OpenAI 兼容） |
-| `MULTIMODAL_MODEL` | `mimo-v2.5-free` | 感知模型（免费多模态） |
-| `AUDIO_MODEL` / `VIDEO_MODEL` | 跟随 MULTIMODAL_MODEL | 分媒体类型指定模型 |
-| `MAX_MEDIA_MB` / `VIDEO_FRAMES` | `20` / `4` | 大小上限 / 抽帧数 |
+| 变量 | 说明 |
+|---|---|
+| `OPENCODE_API_KEY` | 必填：你自己的 opencode zen key，获取 https://opencode.ai/auth |
+| `MULTIMODAL_MODEL` | 可选：感知模型，默认 `mimo-v2.5-free`（免费） |
+| `OPENCODE_BASE_URL` | 可选：感知端点，默认 `https://opencode.ai/zen/v1` |
+
+**API key 写在客户端配置的 `env` 字段中**，不是 `.env` 文件。例如 VS Code：
+
+```json
+{
+  "servers": {
+    "deepseek-vision": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["mcp-deepseek-vision/src/index.js"],
+      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
+    }
+  }
+}
+```
+
+安装脚本会自动填入你的 key。
 
 ## 🧪 已实测（本人 opencode zen key）
 

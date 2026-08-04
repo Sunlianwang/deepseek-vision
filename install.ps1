@@ -84,7 +84,7 @@ function Write-IfMissing($path, $content) {
     }
 }
 
-# VS Code 格式：顶层用 "servers"（含 gallery + version 确保兼容）
+# VS Code 格式：顶层用 "servers"（含 env 传 key + gallery/version）
 $vscodeConfig = @"
 {
   "servers": {
@@ -92,6 +92,7 @@ $vscodeConfig = @"
       "type": "stdio",
       "command": "node",
       "args": ["$serverRelJson"],
+      "env": { "OPENCODE_API_KEY": "$Key" },
       "gallery": "https://api.mcp.github.com",
       "version": "1.0.0"
     }
@@ -99,25 +100,27 @@ $vscodeConfig = @"
 }
 "@
 
-# Cursor 格式：顶层用 "mcpServers"
+# Cursor 格式：顶层用 "mcpServers"（含 env 传 key）
 $cursorConfig = @"
 {
   "mcpServers": {
     "deepseek-vision": {
       "command": "node",
-      "args": ["$serverRelJson"]
+      "args": ["$serverRelJson"],
+      "env": { "OPENCODE_API_KEY": "$Key" }
     }
   }
 }
 "@
 
-# Claude Code 格式：顶层用 "mcpServers"
+# Claude Code 格式：顶层用 "mcpServers"（含 env 传 key）
 $claudeConfig = @"
 {
   "mcpServers": {
     "deepseek-vision": {
       "command": "node",
-      "args": ["$serverRelJson"]
+      "args": ["$serverRelJson"],
+      "env": { "OPENCODE_API_KEY": "$Key" }
     }
   }
 }
@@ -130,7 +133,7 @@ Write-IfMissing (Join-Path $root ".vscode\mcp.json") $vscodeConfig
 Write-IfMissing (Join-Path $root ".cursor\mcp.json") $cursorConfig
 # Claude Code（项目级 .mcp.json）
 Write-IfMissing (Join-Path $root ".mcp.json") $claudeConfig
-# opencode（JSON 结构不同）
+# opencode（JSON 结构不同，含 environment 传 key）
 $oc = Join-Path $root "opencode.json"
 if (-not (Test-Path $oc)) {
     @"
@@ -140,7 +143,8 @@ if (-not (Test-Path $oc)) {
     "deepseek-vision": {
       "type": "local",
       "command": ["node", "$serverRelJson"],
-      "enabled": true
+      "enabled": true,
+      "environment": { "OPENCODE_API_KEY": "$Key" }
     }
   }
 }

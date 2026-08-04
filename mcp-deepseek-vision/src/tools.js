@@ -73,7 +73,6 @@ export async function zenStatus() {
   const lines = [
     `感知端点（zen）：${summary.baseUrl}`,
     `API Key：${summary.apiKeyMasked}（${summary.apiKeySet ? "已配置" : "未配置"}）`,
-    `配置来源：全局 ${summary.globalDir}/.env 或项目 .env`,
     `感知模型（多模态）：${summary.multimodalModel}`,
     `  音频：${summary.audioModel}`,
     `  视频：${summary.videoModel}`,

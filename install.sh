@@ -72,25 +72,27 @@ write_if_missing() { # $1=path $2=content
   fi
 }
 
-# VS Code 格式（顶层 "servers"，含 gallery + version）
+# VS Code 格式（顶层 "servers"，含 env 传 key + gallery/version）
 VSCODE_CFG="{
   \"servers\": {
     \"deepseek-vision\": {
       \"type\": \"stdio\",
       \"command\": \"node\",
       \"args\": [\"$SERVER\"],
+      \"env\": { \"OPENCODE_API_KEY\": \"$KEY\" },
       \"gallery\": \"https://api.mcp.github.com\",
       \"version\": \"1.0.0\"
     }
   }
 }"
 
-# Cursor / Claude Code 格式（顶层 "mcpServers"）
+# Cursor / Claude Code 格式（顶层 "mcpServers"，含 env 传 key）
 CURSOR_CFG="{
   \"mcpServers\": {
     \"deepseek-vision\": {
       \"command\": \"node\",
-      \"args\": [\"$SERVER\"]
+      \"args\": [\"$SERVER\"],
+      \"env\": { \"OPENCODE_API_KEY\": \"$KEY\" }
     }
   }
 }"
@@ -107,7 +109,8 @@ if [ ! -f "$ROOT/opencode.json" ]; then
     "deepseek-vision": {
       "type": "local",
       "command": ["node", "$SERVER"],
-      "enabled": true
+      "enabled": true,
+      "environment": { "OPENCODE_API_KEY": "$KEY" }
     }
   }
 }
