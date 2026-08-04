@@ -257,6 +257,66 @@ set OPENCODE_API_KEY=sk-你的zen-key
 
 ---
 
+## Skill Installation（可选但推荐）
+
+MCP 提供工具能力，Skill 告诉 agent **何时、如何调用**这些工具。没有 Skill，agent 可能不知道要调用我们的工具。
+
+### opencode
+
+```bash
+# 项目级
+mkdir -p .opencode/skills/deepseek-vision
+cp skill/deepseek-vision/SKILL.md .opencode/skills/deepseek-vision/
+
+# 或全局
+mkdir -p ~/.config/opencode/skills/deepseek-vision
+cp skill/deepseek-vision/SKILL.md ~/.config/opencode/skills/deepseek-vision/
+```
+
+### Claude Code
+
+```bash
+# 项目级
+mkdir -p .claude/skills/deepseek-vision
+cp skill/deepseek-vision/SKILL.md .claude/skills/deepseek-vision/
+
+# 或全局
+mkdir -p ~/.claude/skills/deepseek-vision
+cp skill/deepseek-vision/SKILL.md ~/.claude/skills/deepseek-vision/
+```
+
+### VS Code
+
+```bash
+# 项目级
+mkdir -p .vscode/skills
+cp skill/vscode/deepseek-vision.skill.md .vscode/skills/
+
+# 或全局
+mkdir -p ~/.vscode/skills
+cp skill/vscode/deepseek-vision.skill.md ~/.vscode/skills/
+```
+
+### Cursor
+
+```bash
+# 项目级
+mkdir -p .cursor/rules
+cp skill/cursor/deepseek-vision.mdc .cursor/rules/
+
+# 或全局
+mkdir -p ~/.cursor/rules
+cp skill/cursor/deepseek-vision.mdc ~/.cursor/rules/
+```
+
+### Codex / cc-haha / Kilo / WorkBuddy
+
+根目录的 `AGENTS.md` 已包含全部规则，无需额外安装。
+
+> Skill 安装后，agent 会自动发现并加载。重启客户端即可生效。
+
+---
+
 ## Usage
 
 ### VS Code
