@@ -64,9 +64,10 @@ function Write-IfMissing($path, $content) {
     }
 }
 
-$stdioConfig = @"
+# VS Code 格式：顶层用 "servers"
+$vscodeConfig = @"
 {
-  "mcpServers": {
+  "servers": {
     "deepseek-vision": {
       "type": "stdio",
       "command": "node",
@@ -76,11 +77,37 @@ $stdioConfig = @"
 }
 "@
 
+# Cursor 格式：顶层用 "mcpServers"
+$cursorConfig = @"
+{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "node",
+      "args": ["$serverRelJson"]
+    }
+  }
+}
+"@
+
+# Claude Code 格式：顶层用 "mcpServers"
+$claudeConfig = @"
+{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "node",
+      "args": ["$serverRelJson"]
+    }
+  }
+}
+"@
+
 Write-Host "  注册 MCP…"
-# VS Code
-Write-IfMissing (Join-Path $root ".vscode\mcp.json") $stdioConfig
-# Cursor
-Write-IfMissing (Join-Path $root ".cursor\mcp.json") $stdioConfig
+# VS Code（项目级 .vscode/mcp.json —— 用 "servers" 格式）
+Write-IfMissing (Join-Path $root ".vscode\mcp.json") $vscodeConfig
+# Cursor（项目级 .cursor/mcp.json —— 用 "mcpServers" 格式）
+Write-IfMissing (Join-Path $root ".cursor\mcp.json") $cursorConfig
+# Claude Code（项目级 .mcp.json）
+Write-IfMissing (Join-Path $root ".mcp.json") $claudeConfig
 # opencode（JSON 结构不同）
 $oc = Join-Path $root "opencode.json"
 if (-not (Test-Path $oc)) {

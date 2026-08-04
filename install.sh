@@ -53,8 +53,9 @@ write_if_missing() { # $1=path $2=content
   fi
 }
 
-STDIO_CFG="{
-  \"mcpServers\": {
+# VS Code 格式（顶层 "servers"）
+VSCODE_CFG="{
+  \"servers\": {
     \"deepseek-vision\": {
       \"type\": \"stdio\",
       \"command\": \"node\",
@@ -63,9 +64,20 @@ STDIO_CFG="{
   }
 }"
 
+# Cursor / Claude Code 格式（顶层 "mcpServers"）
+CURSOR_CFG="{
+  \"mcpServers\": {
+    \"deepseek-vision\": {
+      \"command\": \"node\",
+      \"args\": [\"$SERVER\"]
+    }
+  }
+}"
+
 echo "  注册 MCP…"
-write_if_missing "$ROOT/.vscode/mcp.json" "$STDIO_CFG"
-write_if_missing "$ROOT/.cursor/mcp.json" "$STDIO_CFG"
+write_if_missing "$ROOT/.vscode/mcp.json" "$VSCODE_CFG"
+write_if_missing "$ROOT/.cursor/mcp.json" "$CURSOR_CFG"
+write_if_missing "$ROOT/.mcp.json" "$CURSOR_CFG"
 if [ ! -f "$ROOT/opencode.json" ]; then
   cat > "$ROOT/opencode.json" <<EOF
 {

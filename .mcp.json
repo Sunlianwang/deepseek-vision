@@ -1,0 +1,8 @@
+﻿{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "node",
+      "args": ["mcp-deepseek-vision\\src\\index.js"]
+    }
+  }
+}
