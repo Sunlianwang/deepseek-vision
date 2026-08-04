@@ -3,7 +3,6 @@
 > 给纯文本主模型做"眼睛"——用免费的 MiMo-V2.5 Free 感知图片/音频/视频，推理由你自己的主模型完成。
 
 [![npm version](https://img.shields.io/npm/v/deepseek-vision?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/deepseek-vision)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](https://opensource.org/licenses/MIT)
 
 ## What it does
 
@@ -17,25 +16,18 @@
 
 ---
 
-## Quick Start
-
-### 前置条件
+## Prerequisites
 
 1. **Node.js >= 18**（下载：https://nodejs.org）
 2. **opencode zen API key**（获取：https://opencode.ai/auth，免费，无需绑定支付方式）
 
-### 一键安装
-
-把下面的 JSON 配置复制到你客户端的 MCP 配置文件中，**把 `sk-你的zen-key` 替换成你自己的 key**：
-
 ---
 
-#### VS Code
+## Installation
 
-配置文件路径：`C:\Users\你的用户名\AppData\Roaming\Code\User\mcp.json`（全局）
-或项目根 `.vscode/mcp.json`（项目级）
+### VS Code
 
-打开方式：`Ctrl+Shift+P` → 输入 `MCP: Open User Configuration`
+编辑全局 MCP 配置文件 `C:\Users\<你的用户名>\AppData\Roaming\Code\User\mcp.json`：
 
 ```json
 {
@@ -44,18 +36,42 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
     }
   }
 }
 ```
 
+> 打开方式：`Ctrl+Shift+P` → 输入 `MCP: Open User Configuration`
+>
+> 也可以在项目根目录创建 `.vscode/mcp.json`，内容相同。
+
+**或者**使用项目级配置，在项目根目录创建 `.vscode/mcp.json`：
+
+```json
+{
+  "servers": {
+    "deepseek-vision": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "deepseek-vision"],
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
+    }
+  }
+}
+```
+
+重启 VS Code。
+
 ---
 
-#### Cursor
+### Cursor
 
-配置文件路径：`C:\Users\你的用户名\.cursor\mcp.json`（全局）
-或项目根 `.cursor/mcp.json`（项目级）
+编辑全局 MCP 配置文件 `C:\Users\<你的用户名>\.cursor\mcp.json`：
 
 ```json
 {
@@ -63,34 +79,59 @@
     "deepseek-vision": {
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": { "OPENCODE_API_KEY": "sk-你的zen-key" }
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
     }
   }
 }
 ```
 
+> 打开方式：`Ctrl+Shift+P` → 输入 `Cursor: Open Global MCP`
+>
+> 也可以在项目根目录创建 `.cursor/mcp.json`，内容相同。
+
+重启 Cursor。
+
 ---
 
-#### Claude Code
+### Claude Code
+
+运行以下命令注册 MCP server：
 
 ```bash
 claude mcp add deepseek-vision -- npx -y deepseek-vision
 ```
 
-然后设置环境变量（在终端中执行）：
+然后在终端中设置环境变量（每次新开终端都需要执行）：
 
 ```powershell
 set OPENCODE_API_KEY=sk-你的zen-key
 ```
 
-或创建 `.mcp.json` 文件（同 Cursor 格式）。
+或者创建项目根目录 `.mcp.json` 文件：
+
+```json
+{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "npx",
+      "args": ["-y", "deepseek-vision"],
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
+    }
+  }
+}
+```
+
+重启 Claude Code。
 
 ---
 
-#### opencode
+### opencode
 
-配置文件路径：`~/.config/opencode/opencode.json`（全局）
-或项目根 `opencode.json`（项目级）
+编辑全局配置文件 `~/.config/opencode/opencode.json`：
 
 ```json
 {
@@ -99,15 +140,23 @@ set OPENCODE_API_KEY=sk-你的zen-key
       "type": "local",
       "command": ["npx", "-y", "deepseek-vision"],
       "enabled": true,
-      "environment": { "OPENCODE_API_KEY": "sk-你的zen-key" }
+      "environment": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
     }
   }
 }
 ```
 
+> 也可以在项目根目录创建 `opencode.json`，内容相同。
+
+重启 opencode。
+
 ---
 
-#### Codex CLI
+### Codex CLI
+
+运行以下命令：
 
 ```bash
 codex mcp add deepseek-vision -- npx -y deepseek-vision
@@ -115,16 +164,73 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 
 ---
 
-#### Windsurf / Trae / 其他
+### Windsurf
 
-MCP 设置面板 → 添加 stdio server：
-- **Command**: `npx`
-- **Args**: `-y deepseek-vision`
-- **Env**: `OPENCODE_API_KEY=sk-你的zen-key`
+编辑项目根目录 `.windsurf/mcp_config.json`：
+
+```json
+{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "npx",
+      "args": ["-y", "deepseek-vision"],
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
+    }
+  }
+}
+```
+
+重启 Windsurf。
 
 ---
 
-### 验证安装
+### Trae
+
+编辑项目根目录 `.trae/mcp.json`：
+
+```json
+{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "npx",
+      "args": ["-y", "deepseek-vision"],
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
+    }
+  }
+}
+```
+
+重启 Trae。
+
+---
+
+### Zed
+
+编辑 `~/.config/zed/settings.json`，在 `context_servers` 中添加：
+
+```json
+{
+  "context_servers": {
+    "deepseek-vision": {
+      "command": "npx",
+      "args": ["-y", "deepseek-vision"],
+      "env": {
+        "OPENCODE_API_KEY": "sk-你的zen-key"
+      }
+    }
+  }
+}
+```
+
+重启 Zed。
+
+---
+
+## Verify
 
 重启客户端后，对 agent 说：
 
@@ -136,7 +242,7 @@ MCP 设置面板 → 添加 stdio server：
 
 ---
 
-## 使用
+## Usage
 
 ### VS Code
 
@@ -144,16 +250,13 @@ MCP 设置面板 → 添加 stdio server：
 请分析图片 D:\x\photo.png 的内容
 ```
 
-> ⚠️ **VS Code 用户注意：请提供文件路径，不要直接粘贴图片！**
->
-> VS Code 会自动把粘贴的图片作为 `image_url` 发给模型，但纯文本模型不支持这个格式。
-> 正确做法：输入文件路径（如 `D:\x\photo.png`）。
+> ⚠️ VS Code 用户：请提供**文件路径**，不要直接粘贴图片。VS Code 会把粘贴的图片作为 `image_url` 发给模型，纯文本模型不支持这个格式。
 
 ### Codex / Claude Code 桌面端
 
-这些客户端支持直接粘贴图片，agent 会自动处理。
+这些客户端支持直接粘贴图片，agent 会自动调用 MCP 工具处理。
 
-### 所有客户端通用
+### 所有客户端
 
 agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理回答。
 
@@ -167,7 +270,7 @@ agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理�
 
 | 参数 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| `source` | string | ✅ | 文件路径或 URL |
+| `source` | string | ✅ | 文件路径、URL 或 data URI |
 | `task` | string | 否 | 用户关注点（聚焦感知） |
 | `hint` | string | 否 | 显式指定类型：image / audio / video |
 
@@ -177,7 +280,7 @@ agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理�
 
 | 参数 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| `source` | string | ✅ | 图片本地路径或 URL |
+| `source` | string | ✅ | 图片本地路径、URL 或 data URI |
 | `prompt` | string | 否 | 关注点（默认完整描述） |
 | `detail` | string | 否 | 分辨率：auto / low / high |
 
@@ -210,7 +313,7 @@ agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理�
 
 ---
 
-## 配置项
+## Configuration
 
 在客户端配置的 `env` / `environment` 字段中设置：
 
