@@ -1,32 +1,36 @@
 // platform.js — 截图 & 窗口列表（Windows PowerShell）
 import { execSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { tmpdir } from "node:os";
+import { writeFileSync, unlinkSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir, homedir } from "node:os";
 import { config } from "./config.js";
 
 function runPS(script, timeout = 15000) {
   const f = join(tmpdir(), "vs-" + Date.now() + ".ps1");
-  fs.writeFileSync(f, "\ufeff" + script, "utf-8");
+  writeFileSync(f, "\ufeff" + script, "utf-8");
   try {
     return execSync(`powershell -NoProfile -ExecutionPolicy Bypass -File "${f}"`, {
       encoding: "utf-8", timeout, windowsHide: true,
     }).trim();
   } finally {
-    try { fs.unlinkSync(f); } catch {}
+    try { unlinkSync(f); } catch {}
   }
 }
-
-import { writeFileSync, unlinkSync } from "node:fs";
 
 export function fileExists(p) { return existsSync(p); }
 export function filePath(p) { return p; }
 
-const DPI_PREAMBLE = `Add-Type @"
+const DPI_PREAMBLE = `
+Add-Type @"
 using System;
 using System.Runtime.InteropServices;
-public class DPI { [DllImport("user32.dll")] public static extern bool SetProcessDPIAware(); }
-"@ [DPI]::SetProcessDPIAware() | Out-Null`;
+public class DPI {
+  [DllImport("user32.dll")]
+  public static extern bool SetProcessDPIAware();
+}
+"@
+[DPI]::SetProcessDPIAware() | Out-Null
+`.trim();
 
 export function listWindows() {
   const ps = `
@@ -53,11 +57,11 @@ for($i=0; $i -lt [WL]::T.Count; $i++) { Write-Output $([WL]::T[$i]) }`.trim();
 
 export function screenshot(mode = "primary", windowTitle = null, filename = null) {
   let dir = config.screenshotDir;
-  // 如果目录不存在或无写入权限，回退到用户目录
+  // 如果目录不存在或无写入权限，回退到当前用户目录
   try { if (!existsSync(dir)) mkdirSync(dir, { recursive: true }); }
-  catch { dir = join(String.raw`${(await import("node:os")).homedir()}\Pictures`, "Screenshots"); }
+  catch { dir = join(homedir(), "Pictures", "Screenshots"); }
   try { if (!existsSync(dir)) mkdirSync(dir, { recursive: true }); }
-  catch { dir = String.raw`${(await import("node:os")).homedir()}\Desktop`; }
+  catch { dir = homedir(); }
   const fname = (filename || `screenshot-${Date.now()}`).replace(/\.(png|jpg)$/i, "") + ".jpg";
   const fp = join(dir, fname);
   const fpEsc = fp.replace(/\\/g, "\\\\");
