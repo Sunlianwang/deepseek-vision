@@ -1,6 +1,6 @@
 ﻿# Vision MCP Server
 
-> 给 DeepSeek 等纯文本模型加"眼睛"——截图分析、图片识别、视频/音频理解，用 Agens 的视觉模型。
+> 给 DeepSeek 等纯文本模型加"眼睛"——截图分析、图片识别、视频/音频理解，用免费的 Agnes 2.5 Flash。
 
 [![npm version](https://img.shields.io/npm/v/deepseek-vision?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/deepseek-vision)
 
@@ -21,7 +21,7 @@
 ## 前置条件
 
 1. **Node.js >= 18**（下载：https://nodejs.org）
-2. **Agens API key**（获取：https://apihub.agnes-ai.com）
+2. **Agnes API key**（获取：https://www.agnes-ai.cn，当前免费）
 
 ---
 
@@ -35,7 +35,7 @@
 [mcp_servers.deepseek-vision]
 command = "npx"
 args = ["-y", "deepseek-vision"]
-env = { VISION_API_KEY = "你的Agens API-key" }
+env = { VISION_API_KEY = "你的Agnes API-key" }
 ```
 
 或命令行：
@@ -58,7 +58,7 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
     "deepseek-vision": {
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": { "VISION_API_KEY": "你的Agens API-key" }
+      "env": { "VISION_API_KEY": "你的Agnes API-key" }
     }
   }
 }
@@ -87,7 +87,7 @@ claude mcp add deepseek-vision -- npx -y deepseek-vision
       "type": "local",
       "command": ["npx", "-y", "deepseek-vision"],
       "enabled": true,
-      "environment": { "VISION_API_KEY": "你的Agens API-key" }
+      "environment": { "VISION_API_KEY": "你的Agnes API-key" }
     }
   }
 }
@@ -125,9 +125,9 @@ claude mcp add deepseek-vision -- npx -y deepseek-vision
 
 | 变量 | 必填 | 默认值 | 说明 |
 |---|---|---|---|
-| `VISION_API_KEY` | ✅ | - | Agens API key |
-| `VISION_MODEL` | 否 | `Qwen2.5-VL-72B-Instruct` | 视觉模型 |
-| `VISION_BASE_URL` | 否 | `https://apihub.agnes-ai.com/v1` | API 端点 |
+| `VISION_API_KEY` | ✅ | - | Agnes API key |
+| `VISION_MODEL` | 否 | `agnes-2.5-flash` | 视觉模型 |
+| `VISION_BASE_URL` | 否 | `https://api.agnes-ai.cn/v1` | 中国端点 |
 | `VISION_SCREENSHOT_DIR` | 否 | `~/Pictures/Screenshots` | 截图保存目录 |
 
 ---
@@ -135,3 +135,4 @@ claude mcp add deepseek-vision -- npx -y deepseek-vision
 ## 许可
 
 MIT
+
