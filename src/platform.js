@@ -22,9 +22,11 @@ export function filePath(p) { return p; }
 
 export function listWindows() {
   const ps = `
-${DPI_PREAMBLE}
 Add-Type @"
-using System; using System.Collections.Generic; using System.Runtime.InteropServices; using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
 public class WL {
   [DllImport("user32.dll")] public static extern bool EnumWindows(EnumWindowsProc cb, IntPtr lp);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
