@@ -53,16 +53,12 @@ export function screenshot(mode = "primary", windowTitle = null, filename = null
   const fp = join(dir, fname);
   const fpEsc = fp.replace(/\\/g, "\\\\");
 
-  let ps;
+  // 窗口截图：PrintWindow
   if (mode === "window" && windowTitle) {
-    // 窗口截图：PrintWindow（后台截取，不切前台）
-    ps = `
+    const ps = `
 Add-Type -AssemblyName System.Drawing
 Add-Type @"
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+using System; using System.Collections.Generic; using System.Runtime.InteropServices; using System.Text;
 public class WC {
   [DllImport("user32.dll")] public static extern bool EnumWindows(EnumWinProc cb, IntPtr lp);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
@@ -85,37 +81,38 @@ $eps=New-Object System.Drawing.Imaging.EncoderParameters(1); $eps.Param[0]=New-O
 $jc=[System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders()|Where-Object{$_.MimeType -eq 'image/jpeg'}
 $bmp.Save('${fpEsc}',$jc,$eps); $g.Dispose(); $bmp.Dispose()
 Write-Output '${fpEsc}'`;
-  } else {
-    // 全屏截图：先试 CopyFromScreen（最可靠），失败再试 GDI BitBlt
-    ps = `
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
-try {
-  $bmp = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-  $img = New-Object System.Drawing.Bitmap($bmp.Width, $bmp.Height)
-  $g = [System.Drawing.Graphics]::FromImage($img)
-  $g.CopyFromScreen($bmp.Location, [System.Drawing.Point]::Empty, $bmp.Size)
-  $eps=New-Object System.Drawing.Imaging.EncoderParameters(1); $eps.Param[0]=New-Object System.Drawing.Imaging.EncoderParameter([System.Drawing.Imaging.Encoder]::Quality,80L)
-  $jc=[System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders()|Where-Object{$_.MimeType -eq 'image/jpeg'}
-  $img.Save('${fpEsc}',$jc,$eps)
-  $g.Dispose(); $img.Dispose()
-  Write-Output '${fpEsc}'
-} catch {
-  Write-Error "CopyFromScreen failed: $_"
-  exit 1
-}`;
+    const out = runPS(ps);
+    const result = out.split("\n").pop().trim();
+    if (result && existsSync(result.replace(/\\\\/g, "\\"))) return result.replace(/\\\\/g, "\\");
+    if (existsSync(fp)) return fp;
+    throw new Error("窗口截图失败: " + out);
   }
 
-  // 方法1：CopyFromScreen（最可靠）
-  let out;
-  try { out = runPS(ps); } catch (e1) {
-    if (mode === "window") throw e1; // 窗口截图没有 fallback
-    // 方法2：GDI BitBlt fallback
-    try {
-      out = runPS(`
+  // 全屏截图：多方法 fallback
+  const methods = [
+    // 方法1：CopyFromScreen + DPI 感知
+    `
 Add-Type @"
-using System;
-using System.Runtime.InteropServices;
+using System; using System.Runtime.InteropServices;
+public class DPI { [DllImport("user32.dll")] public static extern bool SetProcessDPIAware(); }
+"@
+[DPI]::SetProcessDPIAware() | Out-Null
+Add-Type -AssemblyName System.Windows.Forms -ErrorAction SilentlyContinue
+Add-Type -AssemblyName System.Drawing
+$bmp = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+$img = New-Object System.Drawing.Bitmap($bmp.Width, $bmp.Height)
+$g = [System.Drawing.Graphics]::FromImage($img)
+$g.CopyFromScreen($bmp.Location, [System.Drawing.Point]::Empty, $bmp.Size)
+$eps=New-Object System.Drawing.Imaging.EncoderParameters(1); $eps.Param[0]=New-Object System.Drawing.Imaging.EncoderParameter([System.Drawing.Imaging.Encoder]::Quality,80L)
+$jc=[System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders()|Where-Object{$_.MimeType -eq 'image/jpeg'}
+$img.Save('${fpEsc}',$jc,$eps); $g.Dispose(); $img.Dispose()
+Write-Output '${fpEsc}'
+`,
+    // 方法2：GDI BitBlt + DPI 感知
+    `
+Add-Type @"
+using System; using System.Runtime.InteropServices;
+public class DPI { [DllImport("user32.dll")] public static extern bool SetProcessDPIAware(); }
 public class GC {
   [DllImport("user32.dll")] public static extern int GetSystemMetrics(int n);
   [DllImport("gdi32.dll")] public static extern IntPtr CreateDC(string d,string dv,string o,IntPtr dt);
@@ -123,6 +120,8 @@ public class GC {
   [DllImport("gdi32.dll")] public static extern bool DeleteDC(IntPtr dc);
 }
 "@
+[DPI]::SetProcessDPIAware() | Out-Null
+Add-Type -AssemblyName System.Drawing
 $x=[GC]::GetSystemMetrics(76); $y=[GC]::GetSystemMetrics(77); $w=[GC]::GetSystemMetrics(78); $h=[GC]::GetSystemMetrics(79)
 $bmp=New-Object System.Drawing.Bitmap($w,$h); $g=[System.Drawing.Graphics]::FromImage($bmp)
 $hd=$g.GetHdc(); $hs=[GC]::CreateDC("DISPLAY",$null,$null,[IntPtr]::Zero)
@@ -131,14 +130,33 @@ $g.ReleaseHdc($hd); [GC]::DeleteDC($hs)|Out-Null
 $eps=New-Object System.Drawing.Imaging.EncoderParameters(1); $eps.Param[0]=New-Object System.Drawing.Imaging.EncoderParameter([System.Drawing.Imaging.Encoder]::Quality,80L)
 $jc=[System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders()|Where-Object{$_.MimeType -eq 'image/jpeg'}
 $bmp.Save('${fpEsc}',$jc,$eps); $g.Dispose(); $bmp.Dispose()
-Write-Output '${fpEsc}'`);
-    } catch (e2) {
-      throw new Error("截图失败（CopyFromScreen 和 GDI BitBlt 均失败）。请检查：1) 是否有桌面访问权限 2) 截图目录是否可写。错误: " + e2.message);
+Write-Output '${fpEsc}'
+`,
+    // 方法3：最简单的 CopyFromScreen（无 DPI 设置）
+    `
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+$s=[System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+$i=New-Object System.Drawing.Bitmap($s.Width,$s.Height)
+[System.Drawing.Graphics]::FromImage($i).CopyFromScreen($s.Location,[System.Drawing.Point]::Empty,$s.Size)
+$i.Save('${fpEsc}',[System.Drawing.Imaging.ImageFormat]::Jpeg)
+$i.Dispose()
+Write-Output '${fpEsc}'
+`,
+  ];
+
+  let lastError;
+  for (const ps of methods) {
+    try {
+      const out = runPS(ps);
+      const result = out.split("\n").pop().trim();
+      const savedPath = result.replace(/\\\\/g, "\\");
+      if (savedPath && existsSync(savedPath)) return savedPath;
+      if (existsSync(fp)) return fp;
+      lastError = "输出无效: " + out;
+    } catch (e) {
+      lastError = e.message;
     }
   }
-
-  const result = out.split("\n").pop().trim();
-  if (result && existsSync(result.replace(/\\\\/g, "\\"))) return result.replace(/\\\\/g, "\\");
-  if (existsSync(fp)) return fp;
-  throw new Error("截图失败: " + out);
+  throw new Error("截图失败（尝试了3种方法均失败）。最后错误: " + lastError);
 }
