@@ -111,6 +111,31 @@ claude mcp add deepseek-vision -- npx -y deepseek-vision
 
 ---
 
+## Skill（可选，让 agent 自动调用工具）
+
+Skill 是告诉 agent **什么时候、怎么调用** MCP 工具的指令文件。没有 Skill，agent 可能不知道要调用我们的工具。
+
+### 安装
+
+把 `deepseek-vision-skill/SKILL.md` 复制到客户端的 skill 目录：
+
+**Claude Code**：`~/.claude/skills/deepseek-vision/SKILL.md`
+**opencode**：`~/.config/opencode/skills/deepseek-vision/SKILL.md`
+
+```bash
+# Claude Code
+mkdir -p ~/.claude/skills/deepseek-vision
+cp deepseek-vision-skill/SKILL.md ~/.claude/skills/deepseek-vision/
+
+# opencode
+mkdir -p ~/.config/opencode/skills/deepseek-vision
+cp deepseek-vision-skill/SKILL.md ~/.config/opencode/skills/deepseek-vision/
+```
+
+安装后重启客户端，agent 会自动发现并加载 Skill。
+
+---
+
 ## 使用示例
 
 ```
