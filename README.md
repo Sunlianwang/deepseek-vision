@@ -27,85 +27,9 @@
 
 ## 安装
 
-### VS Code
-
-**全局配置**（所有项目可用）
-
-编辑 `C:\Users\<你的用户名>\AppData\Roaming\Code\User\mcp.json`：
-
-```json
-{
-  "servers": {
-    "deepseek-vision": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": { "VISION_API_KEY": "你的智谱API-key" }
-    }
-  }
-}
-```
-
-> 打开方式：`Ctrl+Shift+P` → `MCP: Open User Configuration`
-
-**项目级配置**（仅当前项目）
-
-在项目根目录创建 `.vscode/mcp.json`：
-
-```json
-{
-  "servers": {
-    "deepseek-vision": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": { "VISION_API_KEY": "你的智谱API-key" }
-    }
-  }
-}
-```
-
-重启 VS Code。
-
----
-
-### Claude Code
-
-**全局配置**
-
-编辑 `~/.claude/mcp.json`：
-
-```json
-{
-  "mcpServers": {
-    "deepseek-vision": {
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": { "VISION_API_KEY": "你的智谱API-key" }
-    }
-  }
-}
-```
-
-**项目级配置**
-
-在项目根目录创建 `.mcp.json`，内容同上。
-
-或命令行注册：
-
-```bash
-claude mcp add deepseek-vision -- npx -y deepseek-vision
-```
-
-重启 Claude Code。
-
----
-
 ### Codex
 
-**全局配置**
-
-编辑 `~/.codex/config.toml`：
+编辑全局配置 `~/.codex/config.toml`：
 
 ```toml
 [mcp_servers.deepseek-vision]
@@ -124,11 +48,37 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 
 ---
 
+### Claude Code
+
+编辑全局配置 `~/.claude/mcp.json`：
+
+```json
+{
+  "mcpServers": {
+    "deepseek-vision": {
+      "command": "npx",
+      "args": ["-y", "deepseek-vision"],
+      "env": { "VISION_API_KEY": "你的智谱API-key" }
+    }
+  }
+}
+```
+
+或项目级 `.mcp.json`，内容同上。
+
+或命令行：
+
+```bash
+claude mcp add deepseek-vision -- npx -y deepseek-vision
+```
+
+重启 Claude Code。
+
+---
+
 ### opencode
 
-**全局配置**
-
-编辑 `~/.config/opencode/opencode.json`：
+编辑全局配置 `~/.config/opencode/opencode.json`：
 
 ```json
 {
@@ -143,9 +93,7 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 }
 ```
 
-**项目级配置**
-
-在项目根目录创建 `opencode.json`，内容同上。
+或项目级 `opencode.json`，内容同上。
 
 重启 opencode。
 
@@ -166,22 +114,10 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 ## 使用示例
 
 ```
-# 截屏分析
 "帮我看看当前桌面在干什么"
-
-# 分析图片
 "分析这张图片 D:\x\photo.png"
-
-# 列出窗口
 "现在有哪些窗口开着"
 ```
-
-> ⚠️ **VS Code + DeepSeek 不兼容**：VS Code 会自动把图片作为 `image_url` 发给模型，但 DeepSeek 不支持这个格式，会报错。这是 VS Code 和 DeepSeek 之间的问题，与本 MCP 无关。
->
-> **解决方案**：
-> - 换用 **Codex / Claude Code 桌面端**（支持直接粘贴图片）
-> - 在 VS Code 里换用支持图片的模型（如 GPT-4V、Claude 3.5）
-> - 只输入文件路径，不要让 VS Code 包含图片
 
 ---
 
