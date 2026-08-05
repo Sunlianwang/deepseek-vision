@@ -1,6 +1,6 @@
 ﻿# Vision MCP Server
 
-> 给 DeepSeek 等纯文本模型加"眼睛"——截图分析、图片识别、视频/音频理解，用免费的 Agnes 2.5 Flash。
+> 给 DeepSeek 等纯文本模型加"眼睛"——截图分析、图片识别，用免费的 Agnes 2.5 Flash。
 
 [![npm version](https://img.shields.io/npm/v/deepseek-vision?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/deepseek-vision)
 
@@ -12,9 +12,6 @@
 | `take_screenshot` | 纯截屏保存 |
 | `list_windows` | 列出所有可见窗口 |
 | `analyze_image` | 图片分析 |
-| `analyze_video` | 视频分析 |
-| `transcribe_audio` | 音频转写 |
-| `hybrid_analyze` | 万能感知入口 |
 | `list_models` | 列出可用模型 |
 | `zen_status` | 配置自检 |
 
@@ -133,6 +130,11 @@ cp deepseek-vision-skill/SKILL.md ~/.config/opencode/skills/deepseek-vision/
 ```
 
 安装后重启客户端，agent 会自动发现并加载 Skill。
+
+Skill 包含三条核心规则：
+1. 图片/截图 → 必须调用 MCP 工具
+2. 禁止用 OCR/Read 代替
+3. 根据模型 ID 判断走 MCP 还是内置多模态
 
 ---
 

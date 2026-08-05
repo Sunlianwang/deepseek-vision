@@ -1,5 +1,5 @@
 ---
-name: deepseek-vision
+name: deepseek-vision-skill
 description: 给纯文本模型加"眼睛"——通过视觉 API 分析图片、截屏。当用户发送图片或要求分析屏幕内容时使用。
 ---
 
@@ -38,17 +38,12 @@ description: 给纯文本模型加"眼睛"——通过视觉 API 分析图片、
 
 ## 国内纯文本模型名单（必须走 MCP）
 
-**DeepSeek：** `deepseek-v4-flash` `deepseek-v4-flash-free` `deepseek-v4-pro` `deepseek-v3.2` `deepseek-v3.2-thinking`
+**DeepSeek：** `deepseek-v4-flash` `deepseek-v4-pro` 
 
-**GLM（智谱）：** `glm-5.2` `glm-5.2-max` `glm-5.1` `glm-5` `glm-4.7` `glm-4.6`
+**GLM（智谱）：** `glm-5.2` `glm-5.1` `glm-5` `glm-4.7` `glm-4.6`
 
-**Qwen（阿里）：** `qwen3.8-max` `qwen3.7-max` `qwen3.6-plus` `qwen3.5-flash` `qwen3.5-397b-a17b` `qwen3.5-27b` `qwen3-coder-480b`
 
-**Kimi（月之暗面）：** `kimi-k3-max` `kimi-k2.7-code` `kimi-k2.6` `kimi-k2.5`
-
-**其他国内：** `mimo-v2.5` `mimo-v2-flash` `minimax-m3` `minimax-m2.7` `minimax-m2.5` `hy3`
-
-> `glm-5v-turbo` 是视觉模型，不在纯文本名单中。
+**其他国内：** `mimo-v2.5-pro` 
 
 ---
 
