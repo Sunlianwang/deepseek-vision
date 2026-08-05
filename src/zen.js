@@ -1,37 +1,32 @@
 // zen.js — 智谱 API 客户端（OpenAI 兼容）
 import { config } from "./config.js";
 
-export class ApiError extends Error {
-  constructor(message, status) { super(message); this.name = "ApiError"; this.status = status; }
-}
-
-async function apiFetch(pathname, options = {}) {
-  if (!config.apiKey) throw new ApiError("未配置 OPENCODE_API_KEY", 401);
-  let res;
+export async function chat(model, content) {
+  if (!config.apiKey) throw new Error("未配置 VISION_API_KEY");
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), config.timeoutMs);
   try {
-    res = await fetch(`${config.baseUrl}${pathname}`, {
-      ...options,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}`, ...(options.headers || {}) },
-      signal: AbortSignal.timeout(config.timeoutMs),
+    const res = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}` },
+      body: JSON.stringify({ model, messages: [{ role: "user", content }] }),
+      signal: ctrl.signal,
     });
-  } catch (err) {
-    throw new ApiError(err.name === "TimeoutError" ? `请求超时（${config.timeoutMs}ms）` : `网络错误：${err.message}`);
+    if (!res.ok) throw new Error(`API ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    const data = await res.json();
+    return data?.choices?.[0]?.message?.content ?? "";
+  } finally {
+    clearTimeout(timer);
   }
-  const text = await res.text();
-  let json; try { json = text ? JSON.parse(text) : null; } catch { json = null; }
-  if (!res.ok) throw new ApiError(`API 错误 (HTTP ${res.status})：${json?.error?.message || text?.slice(0, 200)}`, res.status);
-  return json;
-}
-
-export async function chatCompletions({ model, messages, temperature }) {
-  const body = { model, messages };
-  if (temperature !== undefined) body.temperature = temperature;
-  const json = await apiFetch("/chat/completions", { method: "POST", body: JSON.stringify(body) });
-  const content = json?.choices?.[0]?.message?.content ?? "";
-  return { model, text: typeof content === "string" ? content : JSON.stringify(content ?? "") };
 }
 
 export async function listModels() {
-  const json = await apiFetch("/models");
-  return (Array.isArray(json) ? json : json?.data ?? []).map((m) => ({ id: m.id }));
+  if (!config.apiKey) throw new Error("未配置 VISION_API_KEY");
+  const res = await fetch(`${config.baseUrl}/models`, {
+    headers: { Authorization: `Bearer ${config.apiKey}` },
+    signal: AbortSignal.timeout(10000),
+  });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  const data = await res.json();
+  return (Array.isArray(data) ? data : data?.data ?? []).map(m => m.id);
 }
