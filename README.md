@@ -1,6 +1,6 @@
 ﻿# DeepSeek Vision MCP Server
 
-> 给纯文本主模型做"眼睛"——用免费的 MiMo-V2.5 Free 感知图片/音频/视频，推理由你自己的主模型完成。
+> 给纯文本主模型做"眼睛"——用免费的 GLM-4.6V-Flash 感知图片/音频/视频，推理由你自己的主模型完成。
 
 [![npm version](https://img.shields.io/npm/v/deepseek-vision?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/deepseek-vision)
 
@@ -9,17 +9,17 @@
 当你的 agent 客户端使用纯文本模型（如 DeepSeek、自定义 baseURL 的模型）时，本 MCP 提供多模态感知能力：
 
 ```
-用户发送图片/音频/视频 → MCP 用 mimo-v2.5-free 感知 → 返回文本 → 你的主模型推理回答
+用户发送图片/音频/视频 → MCP 用 GLM-4.6V-Flash 感知 → 返回文本 → 你的主模型推理回答
 ```
 
-**不需要切换模型，不需要额外 API，只需要你的 opencode zen API key（免费）。**
+**不需要切换模型，只需要一个免费的智谱 API key。**
 
 ---
 
 ## Prerequisites
 
 1. **Node.js >= 18**（下载：https://nodejs.org）
-2. **opencode zen API key**（获取：https://opencode.ai/auth，免费，无需绑定支付方式）
+2. **智谱 API key**（获取：https://open.bigmodel.cn，免费注册，GLM-4.6V-Flash 免费）
 
 ---
 
@@ -37,7 +37,7 @@
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -58,7 +58,7 @@
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -80,7 +80,7 @@
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -106,7 +106,7 @@ claude mcp add deepseek-vision -- npx -y deepseek-vision
 然后在终端中设置环境变量（每次新开终端都需要执行）：
 
 ```powershell
-set OPENCODE_API_KEY=sk-你的zen-key
+set OPENCODE_API_KEY=你的智谱API-key
 ```
 
 或者创建项目根目录 `.mcp.json` 文件：
@@ -118,7 +118,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -141,7 +141,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
       "command": ["npx", "-y", "deepseek-vision"],
       "enabled": true,
       "environment": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -162,7 +162,7 @@ Codex 使用 TOML 格式配置。编辑 `~/.codex/config.toml`（CLI 和 IDE 扩
 [mcp_servers.deepseek-vision]
 command = "npx"
 args = ["-y", "deepseek-vision"]
-env = { OPENCODE_API_KEY = "sk-你的zen-key" }
+env = { OPENCODE_API_KEY = "你的智谱API-key" }
 ```
 
 或者通过 Codex CLI 添加：
@@ -174,7 +174,7 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 然后设置环境变量：
 
 ```powershell
-set OPENCODE_API_KEY=sk-你的zen-key
+set OPENCODE_API_KEY=你的智谱API-key
 ```
 
 ---
@@ -190,7 +190,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -212,7 +212,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -234,7 +234,7 @@ set OPENCODE_API_KEY=sk-你的zen-key
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
       "env": {
-        "OPENCODE_API_KEY": "sk-你的zen-key"
+        "OPENCODE_API_KEY": "你的智谱API-key"
       }
     }
   }
@@ -319,21 +319,13 @@ cp skill/cursor/deepseek-vision.mdc ~/.cursor/rules/
 
 ## Usage
 
-### VS Code
-
 ```
 请分析图片 D:\x\photo.png 的内容
 ```
 
 > ⚠️ VS Code 用户：请提供**文件路径**，不要直接粘贴图片。VS Code 会把粘贴的图片作为 `image_url` 发给模型，纯文本模型不支持这个格式。
-
-### Codex / Claude Code 桌面端
-
-这些客户端支持直接粘贴图片，agent 会自动调用 MCP 工具处理。
-
-### 所有客户端
-
-agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理回答。
+>
+> Codex / Claude Code 桌面端支持直接粘贴图片。
 
 ---
 
@@ -394,9 +386,9 @@ agent 会调用 `hybrid_analyze` 感知媒体，然后用你的主模型推理�
 
 | 变量 | 必填 | 默认值 | 说明 |
 |---|---|---|---|
-| `OPENCODE_API_KEY` | ✅ | - | 你的 zen key |
-| `MULTIMODAL_MODEL` | 否 | `mimo-v2.5-free` | 感知模型 |
-| `OPENCODE_BASE_URL` | 否 | `https://opencode.ai/zen/v1` | 感知端点 |
+| `OPENCODE_API_KEY` | ✅ | - | 智谱 API key |
+| `MULTIMODAL_MODEL` | 否 | `glm-4.6v-flash` | 感知模型 |
+| `OPENCODE_BASE_URL` | 否 | `https://open.bigmodel.cn/api/paas/v4` | API 端点 |
 
 ---
 
@@ -414,14 +406,15 @@ A: 能。MCP 只做感知（把媒体变成文字），推理由你的主模型�
 **Q: 我想换更强的感知模型？**
 A: 在 `env` 中加 `MULTIMODAL_MODEL: "模型名"`。用 `list_models` 查看可用模型。
 
-**Q: 视频分析报错？**
-A: 需要安装 ffmpeg 并加入 PATH。或用 `analyze_image` 逐帧分析。
-
 **Q: API key 安全吗？**
 A: key 只存在于你本地的客户端配置中，不会上传到任何地方。
+
+**Q: GLM-4.6V-Flash 有速率限制吗？**
+A: 免费模型有智谱官方的限流，但日常使用足够。如需更高频率，可考虑付费模型。
 
 ---
 
 ## License
 
 MIT
+
