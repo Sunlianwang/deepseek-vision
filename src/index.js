@@ -40,12 +40,12 @@ s.tool("transcribe_audio", "转写并理解音频内容。支持本地文件路�
   prompt: z.string().optional().describe("附加要求"),
 }, W(({ source, prompt }) => T.transcribeAudio({ source, prompt })));
 
-s.tool("hybrid_analyze", "万能感知入口：自动识别媒体类型（图片/音频/视频）→ GLM-4.6V-Flash 感知 → 返回文本。", {
+s.tool("hybrid_analyze", "万能感知入口：自动识别媒体类型（图片/音频/视频）→ 视觉模型感知 → 返回文本。", {
   source: z.string().describe("媒体来源：本地文件路径 / URL"),
   task: z.string().optional().describe("用户关注点"),
 }, W(({ source, task }) => T.hybridAnalyze({ source, task })));
 
-s.tool("list_models", "列出智谱 API 可用的全部模型。", {}, W(async () => ({ text: await T.listModels() })));
+s.tool("list_models", "列出视觉 API 可用的全部模型。", {}, W(async () => ({ text: await T.listModels() })));
 
 s.tool("zen_status", "显示当前配置并做 API 连通性自检。", {}, W(() => T.zenStatus()));
 

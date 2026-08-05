@@ -1,4 +1,4 @@
-// zen.js — 智谱 API 客户端（OpenAI 兼容）
+// zen.js — Agnes API 客户端（OpenAI 兼容）
 import { config } from "./config.js";
 
 export async function chat(model, content) {
