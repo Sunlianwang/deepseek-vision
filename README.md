@@ -176,8 +176,12 @@ codex mcp add deepseek-vision -- npx -y deepseek-vision
 "现在有哪些窗口开着"
 ```
 
-> VS Code 用户：请提供文件路径，不要直接粘贴图片。
-> Codex / Claude Code 桌面端支持直接粘贴图片。
+> ⚠️ **VS Code + DeepSeek 不兼容**：VS Code 会自动把图片作为 `image_url` 发给模型，但 DeepSeek 不支持这个格式，会报错。这是 VS Code 和 DeepSeek 之间的问题，与本 MCP 无关。
+>
+> **解决方案**：
+> - 换用 **Codex / Claude Code 桌面端**（支持直接粘贴图片）
+> - 在 VS Code 里换用支持图片的模型（如 GPT-4V、Claude 3.5）
+> - 只输入文件路径，不要让 VS Code 包含图片
 
 ---
 
