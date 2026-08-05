@@ -1,33 +1,37 @@
-﻿# DeepSeek Vision MCP Server
+﻿# Vision MCP Server
 
-> 给纯文本主模型做"眼睛"——用免费的 GLM-4.6V-Flash 感知图片/音频/视频，推理由你自己的主模型完成。
+> 给 DeepSeek 等纯文本模型加"眼睛"——截图分析、图片识别、视频/音频理解，用免费的 GLM-4.6V-Flash。
 
 [![npm version](https://img.shields.io/npm/v/deepseek-vision?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/deepseek-vision)
 
-## What it does
+## 功能
 
-当你的 agent 客户端使用纯文本模型（如 DeepSeek、自定义 baseURL 的模型）时，本 MCP 提供多模态感知能力：
+| 工具 | 说明 |
+|---|---|
+| `describe_screen` | 截屏 + 视觉分析（全屏/主屏/指定窗口） |
+| `take_screenshot` | 纯截屏保存 |
+| `list_windows` | 列出所有可见窗口 |
+| `analyze_image` | 图片分析 |
+| `analyze_video` | 视频分析 |
+| `transcribe_audio` | 音频转写 |
+| `hybrid_analyze` | 万能感知入口 |
+| `list_models` | 列出可用模型 |
+| `zen_status` | 配置自检 |
 
-```
-用户发送图片/音频/视频 → MCP 用 GLM-4.6V-Flash 感知 → 返回文本 → 你的主模型推理回答
-```
-
-**不需要切换模型，只需要一个免费的智谱 API key。**
-
----
-
-## Prerequisites
+## 前置条件
 
 1. **Node.js >= 18**（下载：https://nodejs.org）
-2. **智谱 API key**（获取：https://open.bigmodel.cn，免费注册，GLM-4.6V-Flash 免费）
+2. **智谱 API key**（获取：https://open.bigmodel.cn，免费注册）
 
 ---
 
-## Installation
+## 安装
 
 ### VS Code
 
-编辑全局 MCP 配置文件 `C:\Users\<你的用户名>\AppData\Roaming\Code\User\mcp.json`：
+**全局配置**（所有项目可用）
+
+编辑 `C:\Users\<你的用户名>\AppData\Roaming\Code\User\mcp.json`：
 
 ```json
 {
@@ -36,19 +40,17 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
+      "env": { "VISION_API_KEY": "你的智谱API-key" }
     }
   }
 }
 ```
 
-> 打开方式：`Ctrl+Shift+P` → 输入 `MCP: Open User Configuration`
->
-> 也可以在项目根目录创建 `.vscode/mcp.json`，内容相同。
+> 打开方式：`Ctrl+Shift+P` → `MCP: Open User Configuration`
 
-**或者**使用项目级配置，在项目根目录创建 `.vscode/mcp.json`：
+**项目级配置**（仅当前项目）
+
+在项目根目录创建 `.vscode/mcp.json`：
 
 ```json
 {
@@ -57,9 +59,7 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
+      "env": { "VISION_API_KEY": "你的智谱API-key" }
     }
   }
 }
@@ -69,9 +69,11 @@
 
 ---
 
-### Cursor
+### Claude Code
 
-编辑全局 MCP 配置文件 `C:\Users\<你的用户名>\.cursor\mcp.json`：
+**全局配置**
+
+编辑 `~/.claude/mcp.json`：
 
 ```json
 {
@@ -79,59 +81,54 @@
     "deepseek-vision": {
       "command": "npx",
       "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
+      "env": { "VISION_API_KEY": "你的智谱API-key" }
     }
   }
 }
 ```
 
-> 打开方式：`Ctrl+Shift+P` → 输入 `Cursor: Open Global MCP`
->
-> 也可以在项目根目录创建 `.cursor/mcp.json`，内容相同。
+**项目级配置**
 
-重启 Cursor。
+在项目根目录创建 `.mcp.json`，内容同上。
 
----
-
-### Claude Code
-
-运行以下命令注册 MCP server：
+或命令行注册：
 
 ```bash
 claude mcp add deepseek-vision -- npx -y deepseek-vision
-```
-
-然后在终端中设置环境变量（每次新开终端都需要执行）：
-
-```powershell
-set OPENCODE_API_KEY=你的智谱API-key
-```
-
-或者创建项目根目录 `.mcp.json` 文件：
-
-```json
-{
-  "mcpServers": {
-    "deepseek-vision": {
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
-    }
-  }
-}
 ```
 
 重启 Claude Code。
 
 ---
 
+### Codex
+
+**全局配置**
+
+编辑 `~/.codex/config.toml`：
+
+```toml
+[mcp_servers.deepseek-vision]
+command = "npx"
+args = ["-y", "deepseek-vision"]
+env = { VISION_API_KEY = "你的智谱API-key" }
+```
+
+或命令行：
+
+```bash
+codex mcp add deepseek-vision -- npx -y deepseek-vision
+```
+
+重启 Codex。
+
+---
+
 ### opencode
 
-编辑全局配置文件 `~/.config/opencode/opencode.json`：
+**全局配置**
+
+编辑 `~/.config/opencode/opencode.json`：
 
 ```json
 {
@@ -140,112 +137,21 @@ set OPENCODE_API_KEY=你的智谱API-key
       "type": "local",
       "command": ["npx", "-y", "deepseek-vision"],
       "enabled": true,
-      "environment": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
+      "environment": { "VISION_API_KEY": "你的智谱API-key" }
     }
   }
 }
 ```
 
-> 也可以在项目根目录创建 `opencode.json`，内容相同。
+**项目级配置**
+
+在项目根目录创建 `opencode.json`，内容同上。
 
 重启 opencode。
 
 ---
 
-### Codex CLI
-
-Codex 使用 TOML 格式配置。编辑 `~/.codex/config.toml`（CLI 和 IDE 扩展共享）：
-
-```toml
-[mcp_servers.deepseek-vision]
-command = "npx"
-args = ["-y", "deepseek-vision"]
-env = { OPENCODE_API_KEY = "你的智谱API-key" }
-```
-
-或者通过 Codex CLI 添加：
-
-```bash
-codex mcp add deepseek-vision -- npx -y deepseek-vision
-```
-
-然后设置环境变量：
-
-```powershell
-set OPENCODE_API_KEY=你的智谱API-key
-```
-
----
-
-### Windsurf
-
-编辑项目根目录 `.windsurf/mcp_config.json`：
-
-```json
-{
-  "mcpServers": {
-    "deepseek-vision": {
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
-    }
-  }
-}
-```
-
-重启 Windsurf。
-
----
-
-### Trae
-
-编辑项目根目录 `.trae/mcp.json`：
-
-```json
-{
-  "mcpServers": {
-    "deepseek-vision": {
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
-    }
-  }
-}
-```
-
-重启 Trae。
-
----
-
-### Zed
-
-编辑 `~/.config/zed/settings.json`，在 `context_servers` 中添加：
-
-```json
-{
-  "context_servers": {
-    "deepseek-vision": {
-      "command": "npx",
-      "args": ["-y", "deepseek-vision"],
-      "env": {
-        "OPENCODE_API_KEY": "你的智谱API-key"
-      }
-    }
-  }
-}
-```
-
-重启 Zed。
-
----
-
-## Verify
+## 验证
 
 重启客户端后，对 agent 说：
 
@@ -257,164 +163,35 @@ set OPENCODE_API_KEY=你的智谱API-key
 
 ---
 
-## Skill Installation（可选但推荐）
-
-MCP 提供工具能力，Skill 告诉 agent **何时、如何调用**这些工具。没有 Skill，agent 可能不知道要调用我们的工具。
-
-### opencode
-
-```bash
-# 项目级
-mkdir -p .opencode/skills/deepseek-vision
-cp skill/deepseek-vision/SKILL.md .opencode/skills/deepseek-vision/
-
-# 或全局
-mkdir -p ~/.config/opencode/skills/deepseek-vision
-cp skill/deepseek-vision/SKILL.md ~/.config/opencode/skills/deepseek-vision/
-```
-
-### Claude Code
-
-```bash
-# 项目级
-mkdir -p .claude/skills/deepseek-vision
-cp skill/deepseek-vision/SKILL.md .claude/skills/deepseek-vision/
-
-# 或全局
-mkdir -p ~/.claude/skills/deepseek-vision
-cp skill/deepseek-vision/SKILL.md ~/.claude/skills/deepseek-vision/
-```
-
-### VS Code
-
-```bash
-# 项目级
-mkdir -p .vscode/skills
-cp skill/vscode/deepseek-vision.skill.md .vscode/skills/
-
-# 或全局
-mkdir -p ~/.vscode/skills
-cp skill/vscode/deepseek-vision.skill.md ~/.vscode/skills/
-```
-
-### Cursor
-
-```bash
-# 项目级
-mkdir -p .cursor/rules
-cp skill/cursor/deepseek-vision.mdc .cursor/rules/
-
-# 或全局
-mkdir -p ~/.cursor/rules
-cp skill/cursor/deepseek-vision.mdc ~/.cursor/rules/
-```
-
-### Codex / cc-haha / Kilo / WorkBuddy
-
-根目录的 `AGENTS.md` 已包含全部规则，无需额外安装。
-
-> Skill 安装后，agent 会自动发现并加载。重启客户端即可生效。
-
----
-
-## Usage
+## 使用示例
 
 ```
-请分析图片 D:\x\photo.png 的内容
+# 截屏分析
+"帮我看看当前桌面在干什么"
+
+# 分析图片
+"分析这张图片 D:\x\photo.png"
+
+# 列出窗口
+"现在有哪些窗口开着"
 ```
 
-> ⚠️ VS Code 用户：请提供**文件路径**，不要直接粘贴图片。VS Code 会把粘贴的图片作为 `image_url` 发给模型，纯文本模型不支持这个格式。
->
+> VS Code 用户：请提供文件路径，不要直接粘贴图片。
 > Codex / Claude Code 桌面端支持直接粘贴图片。
 
 ---
 
-## Tools
-
-### hybrid_analyze（推荐）
-
-万能入口：自动识别图片/音频/视频 → 感知 → 返回文本。
-
-| 参数 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| `source` | string | ✅ | 文件路径、URL 或 data URI |
-| `task` | string | 否 | 用户关注点（聚焦感知） |
-| `hint` | string | 否 | 显式指定类型：image / audio / video |
-
-### analyze_image
-
-图片感知：用 mimo-v2.5-free 识别/描述图片内容。
-
-| 参数 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| `source` | string | ✅ | 图片本地路径、URL 或 data URI |
-| `prompt` | string | 否 | 关注点（默认完整描述） |
-| `detail` | string | 否 | 分辨率：auto / low / high |
-
-### transcribe_audio
-
-音频感知：转写并理解音频内容。
-
-| 参数 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| `source` | string | ✅ | 音频本地路径（mp3/wav/m4a） |
-| `prompt` | string | 否 | 附加要求 |
-
-### analyze_video
-
-视频感知：自动抽帧后描述内容（需 ffmpeg）。
-
-| 参数 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| `source` | string | ✅ | 视频本地路径 |
-| `prompt` | string | 否 | 关注点 |
-| `frames` | number | 否 | 抽帧数量 1-8，默认 4 |
-
-### list_models
-
-列出你的 opencode zen 账号可用的全部模型。
-
-### zen_status
-
-显示配置（端点、模型、key）并做 API 连通性自检。
-
----
-
-## Configuration
-
-在客户端配置的 `env` / `environment` 字段中设置：
+## 配置项
 
 | 变量 | 必填 | 默认值 | 说明 |
 |---|---|---|---|
-| `OPENCODE_API_KEY` | ✅ | - | 智谱 API key |
-| `MULTIMODAL_MODEL` | 否 | `glm-4.6v-flash` | 感知模型 |
-| `OPENCODE_BASE_URL` | 否 | `https://open.bigmodel.cn/api/paas/v4` | API 端点 |
+| `VISION_API_KEY` | ✅ | - | 智谱 API key |
+| `VISION_MODEL` | 否 | `glm-4.6v-flash` | 感知模型 |
+| `VISION_BASE_URL` | 否 | `https://open.bigmodel.cn/api/paas/v4` | API 端点 |
+| `VISION_SCREENSHOT_DIR` | 否 | `C:\Users\Administrator\Pictures\Screenshots` | 截图保存目录 |
 
 ---
 
-## FAQ
-
-**Q: npx 报错找不到命令？**
-A: 需要安装 Node.js >= 18。下载：https://nodejs.org
-
-**Q: 如何确认 MCP 已生效？**
-A: 对 agent 说 "调用 zen_status 检查配置"。
-
-**Q: 我的模型是纯文本的，能用吗？**
-A: 能。MCP 只做感知（把媒体变成文字），推理由你的主模型完成。
-
-**Q: 我想换更强的感知模型？**
-A: 在 `env` 中加 `MULTIMODAL_MODEL: "模型名"`。用 `list_models` 查看可用模型。
-
-**Q: API key 安全吗？**
-A: key 只存在于你本地的客户端配置中，不会上传到任何地方。
-
-**Q: GLM-4.6V-Flash 有速率限制吗？**
-A: 免费模型有智谱官方的限流，但日常使用足够。如需更高频率，可考虑付费模型。
-
----
-
-## License
+## 许可
 
 MIT
-
