@@ -30,21 +30,6 @@ s.tool("analyze_image", "分析一张已有的图片。支持文件路径、URL 
   prompt: z.string().optional().describe("自定义分析指令"),
 }, W(({ source, prompt }) => T.analyzeImage({ source, prompt })));
 
-s.tool("analyze_video", "分析一个视频文件。支持本地文件路径。", {
-  source: z.string().describe("视频文件本地路径"),
-  prompt: z.string().optional().describe("自定义分析指令"),
-}, W(({ source, prompt }) => T.analyzeVideo({ source, prompt })));
-
-s.tool("transcribe_audio", "转写并理解音频内容。支持本地文件路径。", {
-  source: z.string().describe("音频文件本地路径（mp3/wav/m4a）"),
-  prompt: z.string().optional().describe("附加要求"),
-}, W(({ source, prompt }) => T.transcribeAudio({ source, prompt })));
-
-s.tool("hybrid_analyze", "万能感知入口：自动识别媒体类型（图片/音频/视频）→ 视觉模型感知 → 返回文本。", {
-  source: z.string().describe("媒体来源：本地文件路径 / URL"),
-  task: z.string().optional().describe("用户关注点"),
-}, W(({ source, task }) => T.hybridAnalyze({ source, task })));
-
 s.tool("list_models", "列出视觉 API 可用的全部模型。", {}, W(async () => ({ text: await T.listModels() })));
 
 s.tool("zen_status", "显示当前配置并做 API 连通性自检。", {}, W(() => T.zenStatus()));
