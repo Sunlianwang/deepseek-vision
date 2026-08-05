@@ -1,11 +1,12 @@
 // config.js — 配置中心
+import { homedir } from "node:os";
 const env = (k, fb) => (process.env[k] === undefined || process.env[k] === "" ? fb : process.env[k]);
 
 export const config = {
   apiKey: env("VISION_API_KEY", ""),
-  baseUrl: env("VISION_BASE_URL", "https://open.bigmodel.cn/api/paas/v4"),
-  model: env("VISION_MODEL", "glm-4.6v-flash"),
-  screenshotDir: env("VISION_SCREENSHOT_DIR", String.raw`C:\Users\Administrator\Pictures\Screenshots`),
+  baseUrl: env("VISION_BASE_URL", "https://apihub.agnes-ai.com/v1"),
+  model: env("VISION_MODEL", "Qwen2.5-VL-72B-Instruct"),
+  screenshotDir: env("VISION_SCREENSHOT_DIR", String.raw`${homedir()}\Pictures\Screenshots`),
   timeoutMs: Number(env("VISION_TIMEOUT_MS", "30000")),
 };
 

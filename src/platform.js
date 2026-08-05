@@ -52,8 +52,12 @@ for($i=0; $i -lt [WL]::T.Count; $i++) { Write-Output $([WL]::T[$i]) }`.trim();
 }
 
 export function screenshot(mode = "primary", windowTitle = null, filename = null) {
-  const dir = config.screenshotDir;
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  let dir = config.screenshotDir;
+  // 如果目录不存在或无写入权限，回退到用户目录
+  try { if (!existsSync(dir)) mkdirSync(dir, { recursive: true }); }
+  catch { dir = join(String.raw`${(await import("node:os")).homedir()}\Pictures`, "Screenshots"); }
+  try { if (!existsSync(dir)) mkdirSync(dir, { recursive: true }); }
+  catch { dir = String.raw`${(await import("node:os")).homedir()}\Desktop`; }
   const fname = (filename || `screenshot-${Date.now()}`).replace(/\.(png|jpg)$/i, "") + ".jpg";
   const fp = join(dir, fname);
   const fpEsc = fp.replace(/\\/g, "\\\\");
